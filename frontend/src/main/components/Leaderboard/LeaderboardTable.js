@@ -2,7 +2,7 @@ import OurTable from "main/components/OurTable";
 //import { hasRole } from "main/utils/currentUser";
 
 // should take in a players list from a commons
-export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
+export default function LeaderboardTable({ leaderboardUsers }) {
 
     const USD = new Intl.NumberFormat("en-US", {
         style: "currency",
