@@ -1,5 +1,5 @@
 import OurTable from "main/components/OurTable";
-import { hasRole } from "main/utils/currentUser";
+//import { hasRole } from "main/utils/currentUser";
 
 // should take in a players list from a commons
 export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
