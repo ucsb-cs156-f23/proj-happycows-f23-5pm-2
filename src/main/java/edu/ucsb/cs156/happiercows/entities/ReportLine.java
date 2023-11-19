@@ -7,7 +7,9 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -25,7 +27,10 @@ public class ReportLine {
     private long userId;
 
     private String username;
+
+    @Getter(AccessLevel.NONE)
     private double totalWealth;
+
     private int numOfCows;
     private double avgCowHealth;
     private int cowsBought;
@@ -35,4 +40,8 @@ public class ReportLine {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Date createDate;
+
+    public String getTotalWealth(){
+        return "$" + this.totalWealth;
+    }
 }

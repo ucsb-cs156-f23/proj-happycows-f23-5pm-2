@@ -57,9 +57,12 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell, _index) => {
+                const cellStyle = cell.column.id === "totalWealth" ? { textAlign: 'right' } : {};
                 return (
                   <td
-                    {...cell.getCellProps()}
+                    {...cell.getCellProps({
+                      style: cellStyle, // include the conditional style here
+                    })}
                     data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}`}
                   >
                     {cell.render('Cell')}
