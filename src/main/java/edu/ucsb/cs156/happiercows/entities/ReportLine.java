@@ -27,10 +27,7 @@ public class ReportLine {
     private long userId;
 
     private String username;
-
-    @Getter(AccessLevel.NONE)
     private double totalWealth;
-
     private int numOfCows;
     private double avgCowHealth;
     private int cowsBought;
@@ -40,8 +37,4 @@ public class ReportLine {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Date createDate;
-
-    public String getTotalWealth(){
-        return "$" + this.totalWealth;
-    }
 }
