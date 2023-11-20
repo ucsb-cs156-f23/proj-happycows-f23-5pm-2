@@ -122,21 +122,21 @@ const onSuccessSell = () => {
   };
 
   const chatButtonStyle = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: 'lightblue',
-    color: 'black',
+    width: '30px',
+    height: '30px',
+    borderRadius: '40%',
+    backgroundColor: 'lightgreen',
+    color: 'gray',
     position: 'fixed',
-    bottom: '20px',
-    right: '20px',
+    bottom: '15px',
+    right: '15px',
   };
 
   const chatContainerStyle = {
-    width: '550px',
+    width: '450px',
     position: 'fixed',
-    bottom: '100px',
-    right: '20px',
+    bottom: '50px',
+    right: '30px',
   };
 
   return (

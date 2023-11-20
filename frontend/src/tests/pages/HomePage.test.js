@@ -48,7 +48,7 @@ describe("HomePage tests", () => {
         expect(typeof (title.textContent)).toBe('string');
         
         await waitFor(() => {
-            expect(title.textContent).toEqual('Howdy Farmer Phillip');
+            expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
         });
     });
 
@@ -69,7 +69,7 @@ describe("HomePage tests", () => {
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
         expect(typeof (title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Howdy Farmer Phillip');
+        expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
     });
 
     test("expected CSS properties", () => {
@@ -84,7 +84,7 @@ describe("HomePage tests", () => {
         );
 
         const title = screen.getByTestId("homePage-title");
-        expect(title).toHaveAttribute("style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;");
+        expect(title).toHaveAttribute("style", "font-size: 45px; border-radius: 5px; background-color: blue; opacity: 0.7;");
     });
 
     test("renders without crashing when lists are full", () => {
@@ -102,7 +102,7 @@ describe("HomePage tests", () => {
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
         expect(typeof (title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Howdy Farmer Phillip');
+        expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
     });
 
     test("Redirects to the PlayPage when you click visit", async () => {

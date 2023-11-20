@@ -186,22 +186,22 @@ describe("PlayPage tests", () => {
 
         // Check styles for the chat button
         expect(chatButton).toHaveStyle(`
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: lightblue;
-            color: black;
+            width: 30px;
+            height: 30px;
+            border-radius: 40%;
+            background-color: lightgreen;
+            color: gray;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
         `);
 
         // Check styles for the chat container
         expect(chatContainer).toHaveStyle(`
-            width: 550px;
+            width: 450px;
             position: fixed;
-            bottom: 100px;
-            right: 20px;
+            bottom: 50px;
+            right: 30px;
         `);
     });
     
