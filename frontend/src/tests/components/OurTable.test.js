@@ -6,12 +6,14 @@ describe("OurTable tests", () => {
         {
             col1: 'Hello',
             col2: 'World',
+            totalWealth: '4200',
             createdAt: '2021-04-01T04:00:00.000',
             log: "foo\nbar\n  baz",
         },
         {
             col1: 'react-table',
             col2: 'rocks',
+            totalWealth: '500',
             createdAt: '2022-01-04T14:00:00.000',
             log: "foo\nbar",
 
@@ -19,6 +21,7 @@ describe("OurTable tests", () => {
         {
             col1: 'whatever',
             col2: 'you want',
+            totalWealth: '10000',
             createdAt: '2023-04-01T23:00:00.000',
             log: "bar\n  baz",
         }
@@ -33,6 +36,11 @@ describe("OurTable tests", () => {
         {
             Header: 'Column 2',
             accessor: 'col2',
+        },
+        {
+            Header: 'Total Wealth',
+            accessor: 'totalWealth',
+            Cell: ({ value }) => `$${value}`
         },
         ButtonColumn("Click", "primary", clickMeCallback, "testId"),
         DateColumn("Date", (cell) => cell.row.original.createdAt),
@@ -50,7 +58,25 @@ describe("OurTable tests", () => {
             <OurTable columns={columns} data={threeRows} />
         );
     });
+    test('totalWealth column should be right justified', () => {
+        render(
+            <OurTable columns={columns} data={threeRows}/>
+        );
+        // Render the OurTable component
+        const { getAllByTestId } = render(<OurTable data={threeRows} columns={columns} />);
 
+        // Find all cells in the totalWealth column
+        const totalWealthCells = getAllByTestId(/cell-row-\d+-col-totalWealth/);
+
+        // Check each cell for right alignment
+        totalWealthCells.forEach(cell => {
+            expect(cell).toHaveStyle('textAlign: right');
+        });
+
+        // Find a cell from another column (e.g., col1) and check it is not right-aligned
+        const otherColumnCell = getAllByTestId(/cell-row-0-col-col1/)[0]; // example for the first cell in col1
+        expect(otherColumnCell).not.toHaveStyle('textAlign: right');
+    });
     test("The button appears in the table", async () => {
         render(
             <OurTable columns={columns} data={threeRows} />
