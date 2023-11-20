@@ -62,19 +62,15 @@ describe("OurTable tests", () => {
         render(
             <OurTable columns={columns} data={threeRows}/>
         );
-        // Render the OurTable component
-        const { getAllByTestId } = render(<OurTable data={threeRows} columns={columns} />);
 
-        // Find all cells in the totalWealth column
-        const totalWealthCells = getAllByTestId(/cell-row-\d+-col-totalWealth/);
+        const totalWealthCells = screen.getAllByTestId(/cell-row-\d+-col-totalWealth/);
 
         // Check each cell for right alignment
         totalWealthCells.forEach(cell => {
             expect(cell).toHaveStyle('textAlign: right');
         });
 
-        // Find a cell from another column (e.g., col1) and check it is not right-aligned
-        const otherColumnCell = getAllByTestId(/cell-row-0-col-col1/)[0]; // example for the first cell in col1
+        const otherColumnCell = screen.getAllByTestId(/cell-row-0-col-col1/)[0]; // example for the first cell in col1
         expect(otherColumnCell).not.toHaveStyle('textAlign: right');
     });
     test("The button appears in the table", async () => {
