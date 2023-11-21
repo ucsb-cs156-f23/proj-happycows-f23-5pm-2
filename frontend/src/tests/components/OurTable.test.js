@@ -58,21 +58,25 @@ describe("OurTable tests", () => {
             <OurTable columns={columns} data={threeRows} />
         );
     });
-    test('totalWealth column should be right justified', () => {
-        render(
-            <OurTable columns={columns} data={threeRows}/>
+
+    test('testable columns should be right justified', () => {
+        render(<OurTable data={threeRows} columns={columns} />);
+
+        const testableColumns = ['col1', 'col2', 'totalWealth'];
+      
+        const expectedNumberOfTestableCells = threeRows.length * testableColumns.length;
+
+        const testableCells = testableColumns.flatMap(accessor =>
+          screen.getAllByTestId(new RegExp(`cell-row-\\d+-col-${accessor}`))
         );
 
-        const totalWealthCells = screen.getAllByTestId(/cell-row-\d+-col-totalWealth/);
+        expect(testableCells).toHaveLength(expectedNumberOfTestableCells);
 
-        // Check each cell for right alignment
-        totalWealthCells.forEach(cell => {
-            expect(cell).toHaveStyle('textAlign: right');
+        testableCells.forEach(cell => {
+          expect(cell).toHaveStyle('textAlign: right');
         });
-
-        const otherColumnCell = screen.getAllByTestId(/cell-row-0-col-col1/)[0]; // example for the first cell in col1
-        expect(otherColumnCell).not.toHaveStyle('textAlign: right');
-    });
+      });
+    
     test("The button appears in the table", async () => {
         render(
             <OurTable columns={columns} data={threeRows} />
