@@ -27,7 +27,7 @@ export default function LeaderboardTable({ leaderboardUsers, currentUser }) {
             },
             sortType: React.useMemo(
                 (rowA,rowB,_id,_desc)=>{
-                    return rowA.original.totalWealth - rowB.original.totalWealth;
+                    return rowA.values['totalWealth'] - rowB.values['totalWealth'];
                 }
             ),
             Cell: (props) => {
