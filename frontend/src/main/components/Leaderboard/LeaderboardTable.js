@@ -2,7 +2,7 @@ import OurTable from "main/components/OurTable";
 import { hasRole } from "main/utils/currentUser";
 
 // should take in a players list from a commons
-export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
+export default function LeaderboardTable({ leaderboardUsers, currentUser }) {
 
     const USD = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -12,11 +12,11 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
     const columns = [
         {
             Header: 'User Id',
-            accessor: 'userId', 
+            accessor: 'userId',
         },
         {
             Header: 'Username',
-            accessor: 'username', 
+            accessor: 'username',
         },
         {
             Header: 'Total Wealth',
@@ -24,30 +24,35 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             accessor: (row, _rowIndex) => {
                 return USD.format(row.totalWealth);
             },
+            sortType: React.useMemo(
+                (rowA,rowB,_id,_desc)=>{
+                    return rowA.original.totalWealth - rowB.original.totalWealth;
+                }
+            ),
             Cell: (props) => {
                 return (
-                  <div style={{textAlign: "right"}}>{props.value}</div>)
-                  },
+                    <div style={{ textAlign: "right" }}>{props.value}</div>)
+            },
         },
         {
             Header: 'Cows Owned',
-            accessor: 'numOfCows', 
+            accessor: 'numOfCows',
         },
         {
             Header: 'Cow Health',
-            accessor: 'cowHealth', 
+            accessor: 'cowHealth',
         },
         {
             Header: 'Cows Bought',
-            accessor: 'cowsBought', 
+            accessor: 'cowsBought',
         },
         {
             Header: 'Cows Sold',
-            accessor: 'cowsSold', 
+            accessor: 'cowsSold',
         },
         {
             Header: 'Cow Deaths',
-            accessor: 'cowDeaths', 
+            accessor: 'cowDeaths',
         },
     ];
 
