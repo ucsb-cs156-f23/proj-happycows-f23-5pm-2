@@ -1,3 +1,4 @@
+import React from "react";
 import OurTable from "main/components/OurTable";
 import { hasRole } from "main/utils/currentUser";
 
