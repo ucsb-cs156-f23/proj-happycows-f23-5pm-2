@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import { Container, CardGroup, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsOverview from "main/components/Commons/CommonsOverview";
@@ -88,10 +87,8 @@ export default function PlayPage() {
     mutationbuy.mutate(userCommons)
   };
 
-
-  const onSuccessSell = () => {
-    toast(`Cow sold!`);
-  }
+const onSuccessSell = () => {
+};
 
   // Stryker disable all 
   const objectToAxiosParamsSell = (newUserCommons) => ({
