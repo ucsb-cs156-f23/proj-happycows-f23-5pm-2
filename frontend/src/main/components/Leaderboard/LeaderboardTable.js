@@ -25,11 +25,15 @@ export default function LeaderboardTable({ leaderboardUsers, currentUser }) {
             accessor: (row, _rowIndex) => {
                 return USD.format(row.totalWealth);
             },
-            sortType: React.useMemo(
+            sortType: 
                 (rowA,rowB,_id,_desc)=>{
-                    return rowA.values['totalWealth'] - rowB.values['totalWealth'];
+                    console.log("desc",_desc);
+                    console.log("rowA",rowA);
+                    const diff = parseFloat(rowA.original.totalWealth) - parseFloat(rowB.original.totalWealth);
+                    console.log("diff",diff);
+                    return diff;
                 }
-            ),
+            ,
             Cell: (props) => {
                 return (
                     <div style={{ textAlign: "right" }}>{props.value}</div>)
