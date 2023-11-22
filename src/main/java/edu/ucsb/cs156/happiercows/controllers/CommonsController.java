@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
-
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -44,6 +45,68 @@ public class CommonsController extends ApiController {
     @Autowired
     CommonsPlusBuilderService commonsPlusBuilderService;
 
+    @Autowired
+    private Environment environment;
+
+    @Operation(summary = "Get default Commons configuration")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/defaults")
+    public ResponseEntity<String> getDefaultCommonsConfig() throws JsonProcessingException {
+        log.info("getDefaultCommonsConfig()...");
+
+        // Retrieve default values from application.properties
+        double startingBalance = environment.getProperty("app.commons.default.startingBalance", Double.class, 10000.0);
+        double cowPrice = environment.getProperty("app.commons.default.cowPrice", Double.class, 100.0);
+        double milkPrice = environment.getProperty("app.commons.default.milkPrice", Double.class, 1.0);
+        double degradationRate = environment.getProperty("app.commons.default.degradationRate", Double.class, 0.001);
+        int carryingCapacity = environment.getProperty("app.commons.default.carryingCapacity", Integer.class, 100);
+        int capacityPerUser = environment.getProperty("app.commons.default.capacityPerUser", Integer.class, 10);
+        String aboveCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.aboveCapacityHealthUpdateStrategy", "Linear");
+        String belowCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.belowCapacityHealthUpdateStrategy", "Constant");
+
+        // Create a new Commons object with default values
+        Commons defaultCommons = Commons.builder()
+                .name("Default Commons")
+                .cowPrice(cowPrice)
+                .milkPrice(milkPrice)
+                .startingBalance(startingBalance)
+                .degradationRate(degradationRate)
+                .showLeaderboard(false)
+                .capacityPerUser(capacityPerUser)
+                .carryingCapacity(carryingCapacity)
+                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(aboveCapacityHealthUpdateStrategy))
+                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(belowCapacityHealthUpdateStrategy))
+                .build();
+
+        // Validate the default Commons object
+        if (defaultCommons.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (defaultCommons.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (defaultCommons.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (defaultCommons.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
+
+        if (defaultCommons.getDegradationRate() < 0) {
+            throw new IllegalArgumentException("Degradation Rate cannot be negative");
+        }
+
+        if (defaultCommons.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
+        }
+
+        // Convert the Commons object to JSON and return it in the response
+        String body = mapper.writeValueAsString(defaultCommons);
+        return ResponseEntity.ok().body(body);
+    }
 
 
     @Operation(summary = "Get a list of all commons")
