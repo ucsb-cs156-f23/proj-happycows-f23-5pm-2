@@ -27,7 +27,7 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             Cell: (props) => {
                 return (
                   <div style={{textAlign: "right"}}>{props.value}</div>)
-                },
+                  },
         },
         {
             Header: 'Cows Owned',
