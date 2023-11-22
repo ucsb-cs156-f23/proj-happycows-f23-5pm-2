@@ -6,14 +6,17 @@ export default function ReportHeaderTable({ report  }) {
         {
             Header: 'Cow Price',
             accessor: 'cowPrice', 
+            Cell: ({ value }) => `$${value}`
         },
         {
             Header: 'Milk Price',
             accessor: 'milkPrice',
+            Cell: ({ value }) => `$${value}`
         },
         {
             Header: 'Start Bal',
             accessor: 'startingBalance',
+            Cell: ({ value }) => `$${value}`
         },
         {
             Header: 'Start Date',

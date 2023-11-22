@@ -46,5 +46,4 @@ public class Report {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Date createDate;
-
 }
