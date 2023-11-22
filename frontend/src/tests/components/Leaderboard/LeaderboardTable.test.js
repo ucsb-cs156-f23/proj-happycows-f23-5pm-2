@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import LeaderboardTable from "main/components/Leaderboard/LeaderboardTable";
@@ -112,6 +112,29 @@ describe("LeaderboardTable tests", () => {
 
   });
     
+  test('renders the correct sorted wealth with click the button', () => {
+    const currentUser = currentUserFixtures.userOnly;
+    render(<QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
+      </MemoryRouter>
+    </QueryClientProvider>);
 
+    fireEvent.click(screen.getByText('Total Wealth'))
+    const allTotalWealthCellsInc = screen.getAllByText(/\$\d+(,\d{3})*(\.\d{2})?/);
+    expect(allTotalWealthCellsInc[0]).toHaveTextContent("$50.00");
+    expect(allTotalWealthCellsInc[1]).toHaveTextContent("$800.00");
+    expect(allTotalWealthCellsInc[2]).toHaveTextContent("$1,000.00");
+    expect(allTotalWealthCellsInc[3]).toHaveTextContent("$1,000.00");
+    expect(allTotalWealthCellsInc[4]).toHaveTextContent("$100,000.00");
+
+    fireEvent.click(screen.getByText('Total Wealth'))
+    const allTotalWealthCellsDec = screen.getAllByText(/\$\d+(,\d{3})*(\.\d{2})?/);
+    expect(allTotalWealthCellsDec[4]).toHaveTextContent("$50.00");
+    expect(allTotalWealthCellsDec[3]).toHaveTextContent("$800.00");
+    expect(allTotalWealthCellsDec[2]).toHaveTextContent("$1,000.00");
+    expect(allTotalWealthCellsDec[1]).toHaveTextContent("$1,000.00");
+    expect(allTotalWealthCellsDec[0]).toHaveTextContent("$100,000.00");
+  });
 });
 
