@@ -7,7 +7,9 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 

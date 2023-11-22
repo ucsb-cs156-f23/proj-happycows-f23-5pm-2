@@ -14,6 +14,7 @@ export default function ReportLineTable({ reportLines }) {
         {
             Header: 'Total Wealth',
             accessor: 'totalWealth',
+            Cell: ({ value }) => `$${value}`
         },
         {
             Header: 'Num Cows',

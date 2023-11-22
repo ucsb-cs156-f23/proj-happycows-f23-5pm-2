@@ -6,12 +6,14 @@ describe("OurTable tests", () => {
         {
             col1: 'Hello',
             col2: 'World',
+            totalWealth: '4200',
             createdAt: '2021-04-01T04:00:00.000',
             log: "foo\nbar\n  baz",
         },
         {
             col1: 'react-table',
             col2: 'rocks',
+            totalWealth: '500',
             createdAt: '2022-01-04T14:00:00.000',
             log: "foo\nbar",
 
@@ -19,6 +21,7 @@ describe("OurTable tests", () => {
         {
             col1: 'whatever',
             col2: 'you want',
+            totalWealth: '10000',
             createdAt: '2023-04-01T23:00:00.000',
             log: "bar\n  baz",
         }
@@ -33,6 +36,11 @@ describe("OurTable tests", () => {
         {
             Header: 'Column 2',
             accessor: 'col2',
+        },
+        {
+            Header: 'Total Wealth',
+            accessor: 'totalWealth',
+            Cell: ({ value }) => `$${value}`
         },
         ButtonColumn("Click", "primary", clickMeCallback, "testId"),
         DateColumn("Date", (cell) => cell.row.original.createdAt),
@@ -51,6 +59,24 @@ describe("OurTable tests", () => {
         );
     });
 
+    test('testable columns should be right justified', () => {
+        render(<OurTable data={threeRows} columns={columns} />);
+
+        const testableColumns = ['col1', 'col2', 'totalWealth'];
+      
+        const expectedNumberOfTestableCells = threeRows.length * testableColumns.length;
+
+        const testableCells = testableColumns.flatMap(accessor =>
+          screen.getAllByTestId(new RegExp(`cell-row-\\d+-col-${accessor}`))
+        );
+
+        expect(testableCells).toHaveLength(expectedNumberOfTestableCells);
+
+        testableCells.forEach(cell => {
+          expect(cell).toHaveStyle('textAlign: right');
+        });
+      });
+    
     test("The button appears in the table", async () => {
         render(
             <OurTable columns={columns} data={threeRows} />
