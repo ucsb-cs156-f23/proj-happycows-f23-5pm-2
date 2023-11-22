@@ -24,12 +24,6 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             accessor: (row, _rowIndex) => {
                 return USD.format(row.totalWealth);
             },
-            // sortType: 
-            //     (rowA,rowB,_id,_desc)=>{
-            //         // const diff = parseFloat() - parseFloat(rowB.original.totalWealth);
-            //         return rowA.original.totalWealth - rowB.original.totalWealth;
-            //     }
-            // ,
             Cell: (props) => {
                 return (
                   <div style={{textAlign: "right"}}>{props.value}</div>)
