@@ -12,7 +12,7 @@ const chatButtonStyle = {
   };
 
 
-const ChatToggle = ({ toggleChatWindow }) => 
+const ChatToggle = ({ toggleChatWindow, isChatOpen }) => 
 {
     return (
         <Button
@@ -20,7 +20,7 @@ const ChatToggle = ({ toggleChatWindow }) =>
             onClick={toggleChatWindow}
             data-testid="ChatToggle"
         >
-            Chat
+            {!isChatOpen? '▲' : '▼'}
         </Button>
     );
 }
