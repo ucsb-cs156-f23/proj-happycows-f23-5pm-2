@@ -1,5 +1,4 @@
 import React from 'react';
-import { rest } from 'msw';
 import ChatToggle from "main/components/Chat/ChatToggle";
 
 export default {
@@ -7,11 +6,6 @@ export default {
     component: ChatToggle
 };
 
-const [isChatOpen, setIsChatOpen] = useState(false);
-
-const toggleChatWindow = () => {
-setIsChatOpen((prevState) => !prevState);
-};
 
 const Template = (args) => {
     return (
@@ -19,8 +13,11 @@ const Template = (args) => {
     )
 };
 
+const toggleChatWindow = () => {}
+
 export const Message = Template.bind({});
 
 Message.args = {
     toggleChatWindow: toggleChatWindow,
+    isChatOpen: false
 };
