@@ -15,7 +15,6 @@ describe("LeaderboardTable tests", () => {
   const queryClient = new QueryClient();
 
   test("renders without crashing for empty table with user not logged in", () => {
-    const currentUser = null;
 
     render(
       <QueryClientProvider client={queryClient}>
