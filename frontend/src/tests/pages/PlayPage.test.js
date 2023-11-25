@@ -132,11 +132,11 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+            expect(screen.getByTestId("ChatToggle")).toBeInTheDocument();
         });
     
         // Make sure the chat toggle button is visible
-        const chatToggleButton = screen.getByTestId("playpage-chat-toggle");
+        const chatToggleButton = screen.getByTestId("ChatToggle");
         expect(chatToggleButton).toBeInTheDocument();
         
         // Make sure the ChatPanel is not visible initially
@@ -169,19 +169,19 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+            expect(screen.getByTestId("ChatToggle")).toBeInTheDocument();
         });
 
-        const chatButton = screen.getByTestId("playpage-chat-toggle");
+        const chatButton = screen.getByTestId("ChatToggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
-        expect(chatButton).toHaveTextContent('▲');
+        expect(chatButton).toHaveTextContent('Chat');
 
         // Click the chat toggle button to open the ChatPanel
         fireEvent.click(chatButton);
 
         await waitFor(() => {
-            expect(chatButton).toHaveTextContent('▼');
+            expect(chatButton).toHaveTextContent('Chat');
         });
 
         // Check styles for the chat button
