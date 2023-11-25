@@ -31,10 +31,11 @@ const CommonsList = (props) => {
                 </Container>
             </Card.Subtitle>
             {
-                props.commonList &&
-                props.commonList.map(
-                    (c) => (<CommonsCard key={c.id} commons={c} buttonText={props.buttonText} buttonLink={props.buttonLink} />)
-                )
+                props.commonList && props.commonList.length > 0 ?
+                props.commonList.map((c) => (
+                    <CommonsCard key={c.id} commons={c} buttonText={props.buttonText} buttonLink={props.buttonLink} />
+                )) :
+                <div className="text-center my-3">Currently, there are no commons available.</div>
             }
         </Card>
     );
