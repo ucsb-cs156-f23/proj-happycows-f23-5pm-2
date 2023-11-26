@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,6 +34,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -58,6 +60,9 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private Environment environment;
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
@@ -1234,7 +1239,42 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         assertEquals(100, commonsPlus.getEffectiveCapacity());
     }
+    
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void getDefaultCommons_valid() throws Exception {
+        MvcResult response = mockMvc.perform(get("/api/commons/defaults"))
+                .andExpect(status().isOk()).andReturn();
+        
+        int startingBalance = environment.getProperty("app.commons.default.startingBalance", Integer.class, 10000);
+        int cowPrice = environment.getProperty("app.commons.default.cowPrice", Integer.class, 100);
+        int milkPrice = environment.getProperty("app.commons.default.milkPrice", Integer.class, 1);
+        double degradationRate = environment.getProperty("app.commons.default.degradationRate", Double.class, 0.001);
+        int carryingCapacity = environment.getProperty("app.commons.default.carryingCapacity", Integer.class, 100);
+        int capacityPerUser = environment.getProperty("app.commons.default.capacityPerUser", Integer.class, 5);
+        String aboveCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.aboveCapacityHealthUpdateStrategy", "Linear");
+        String belowCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.belowCapacityHealthUpdateStrategy", "Constant");
 
+        Commons expectedDefaultCommons = Commons.builder()
+                .name("")
+                .cowPrice(cowPrice)
+                .milkPrice(milkPrice)
+                .startingBalance(startingBalance)
+                .startingDate(LocalDateTime.now().withNano(0))
+                .degradationRate(degradationRate)
+                .showLeaderboard(false)
+                .capacityPerUser(capacityPerUser)
+                .carryingCapacity(carryingCapacity)
+            .build();
+
+        expectedDefaultCommons.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(aboveCapacityHealthUpdateStrategy));
+        expectedDefaultCommons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(belowCapacityHealthUpdateStrategy));
+
+        String expectedJson = mapper.writeValueAsString(expectedDefaultCommons);
+
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
 
 }
 
