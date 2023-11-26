@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -44,6 +46,44 @@ public class CommonsController extends ApiController {
     @Autowired
     CommonsPlusBuilderService commonsPlusBuilderService;
 
+    @Autowired
+    private Environment environment;
+
+    @Operation(summary = "Get default commons configuration")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/defaults")
+    public ResponseEntity<String> getDefaultCommonsConfig() throws JsonProcessingException {
+        log.info("getDefaultCommonsConfig()...");
+
+        // Retrieve default values from application.properties
+        int startingBalance = environment.getProperty("app.commons.default.startingBalance", Integer.class, 10000);
+        int cowPrice = environment.getProperty("app.commons.default.cowPrice", Integer.class, 100);
+        int milkPrice = environment.getProperty("app.commons.default.milkPrice", Integer.class, 1);
+        double degradationRate = environment.getProperty("app.commons.default.degradationRate", Double.class, 0.001);
+        int carryingCapacity = environment.getProperty("app.commons.default.carryingCapacity", Integer.class, 100);
+        int capacityPerUser = environment.getProperty("app.commons.default.capacityPerUser", Integer.class, 5);
+        String aboveCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.aboveCapacityHealthUpdateStrategy", "Linear");
+        String belowCapacityHealthUpdateStrategy = environment.getProperty("app.commons.default.belowCapacityHealthUpdateStrategy", "Constant");
+
+        // Create a new Commons object with default values
+        Commons defaultCommons = Commons.builder()
+                .name("")
+                .cowPrice(cowPrice)
+                .milkPrice(milkPrice)
+                .startingBalance(startingBalance)
+                .startingDate(LocalDateTime.now().withNano(0))
+                .degradationRate(degradationRate)
+                .showLeaderboard(false)
+                .capacityPerUser(capacityPerUser)
+                .carryingCapacity(carryingCapacity)
+                .build();
+
+        defaultCommons.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(aboveCapacityHealthUpdateStrategy));
+        defaultCommons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(belowCapacityHealthUpdateStrategy));
+        // Convert the Commons object to JSON and return it in the response
+        String body = mapper.writeValueAsString(defaultCommons);
+        return ResponseEntity.ok().body(body);
+    }
 
 
     @Operation(summary = "Get a list of all commons")
