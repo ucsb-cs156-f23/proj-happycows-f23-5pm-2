@@ -8,6 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import org.apache.tomcat.jni.Local;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +32,7 @@ public class Commons {
     private double milkPrice;
     private double startingBalance;
     private LocalDateTime startingDate;
+    private LocalDateTime lastDate; // subject to change, see issue #18, linked to #11
     private boolean showLeaderboard;
     
     private int capacityPerUser;
@@ -47,5 +52,15 @@ public class Commons {
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 
+    // returns true if today's date is >= start date, and <= last day
+    public boolean gameInProgress() {
+        LocalDateTime todayDateTime = LocalDateTime.now();
+
+        boolean output = (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) 
+                    && (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate));
+
+        return output;
+
+    }
     
 }
