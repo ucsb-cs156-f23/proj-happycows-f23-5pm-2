@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import org.apache.tomcat.jni.Local;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-
 
 @Data
 @AllArgsConstructor
@@ -56,8 +51,8 @@ public class Commons {
     public boolean gameInProgress() {
         LocalDateTime todayDateTime = LocalDateTime.now();
 
-        boolean output = (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) 
-                    && (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate));
+        boolean output = ( (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) 
+                    && (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate)) );
 
         return output;
 
