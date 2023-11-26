@@ -12,11 +12,11 @@ public class CommonsTests {
 
     @Test
     void test_gameInProgressTrue() throws Exception {
-        assertEquals(true, Commons.builder().startingDate(dt2).lastDate(dt1).build().gameInProgress());
+        assertEquals(true, Commons.builder().startingDate(dt1).lastDate(dt3).build().gameInProgress());
     }
 
     @Test
     void test_gameInProgress_False_Already_Ended() throws Exception {
-        assertEquals(false, Commons.builder().startingDate(dt2).lastDate(dt3).build().gameInProgress());
+        assertEquals(false, Commons.builder().startingDate(dt2).lastDate(dt1).build().gameInProgress());
     }
 }
