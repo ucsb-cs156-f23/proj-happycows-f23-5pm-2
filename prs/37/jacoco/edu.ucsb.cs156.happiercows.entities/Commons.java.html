@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import org.apache.tomcat.jni.Local;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-
 
 @Data
 @AllArgsConstructor
@@ -54,12 +49,12 @@ public class Commons {
 
     // returns true if today's date is &gt;= start date, and &lt;= last day
     public boolean gameInProgress() {
-<span class="fc" id="L57">        LocalDateTime todayDateTime = LocalDateTime.now();</span>
+<span class="fc" id="L52">        LocalDateTime todayDateTime = LocalDateTime.now();</span>
 
-<span class="pc bpc" id="L59" title="3 of 4 branches missed.">        boolean output = (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) </span>
-<span class="pc bpc" id="L60" title="1 of 4 branches missed.">                    &amp;&amp; (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate));</span>
+<span class="pc bpc" id="L54" title="1 of 4 branches missed.">        boolean output = ( (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) </span>
+<span class="pc bpc" id="L55" title="1 of 4 branches missed.">                    &amp;&amp; (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate)) );</span>
 
-<span class="fc" id="L62">        return output;</span>
+<span class="fc" id="L57">        return output;</span>
 
     }
     
