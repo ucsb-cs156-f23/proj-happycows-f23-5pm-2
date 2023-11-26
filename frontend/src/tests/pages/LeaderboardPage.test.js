@@ -80,6 +80,7 @@ describe("LeaderboardPage tests", () => {
         const leaderboard_main_div = screen.getByTestId("LeaderboardPage-main-div");
         const leaderboard_back_button = screen.getByTestId("LeaderboardPage-back-button");
         expect(leaderboard_main_div).toHaveAttribute("style","background-size: cover; background-image: url(PlayPageBackground.png);");
+        expect(leaderboard_back_button).toHaveAttribute("style", "float: right; margin-right: 500px;");
         expect(leaderboard_back_button).toBeInTheDocument();
     });
 
