@@ -112,8 +112,8 @@ describe("LeaderboardTable tests", () => {
 
   });
     
-  test('renders the correct sorted wealth with click the button', () => {
-    const currentUser = currentUserFixtures.userOnly;
+  test("renders the correct sorted wealth with click the button", () => {
+    const currentUser = currentUserFixtures.adminUser;
     render(<QueryClientProvider client={queryClient}>
       <MemoryRouter>
         <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
