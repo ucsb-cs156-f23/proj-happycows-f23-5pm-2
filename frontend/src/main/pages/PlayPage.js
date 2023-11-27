@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Container, CardGroup, Button } from "react-bootstrap";
+import { Container, CardGroup} from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
@@ -12,6 +12,7 @@ import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
 import ChatPanel from "main/components/Chat/ChatPanel";
+import ChatToggle from "main/components/Chat/ChatToggle";
 
 export default function PlayPage() {
 
@@ -121,16 +122,6 @@ const onSuccessSell = () => {
     setIsChatOpen((prevState) => !prevState);
   };
 
-  const chatButtonStyle = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: 'lightblue',
-    color: 'black',
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-  };
 
   const chatContainerStyle = {
     width: '550px',
@@ -157,9 +148,7 @@ const onSuccessSell = () => {
       </BasicLayout>
       <div style={chatContainerStyle} data-testid="playpage-chat-div">
         {!!isChatOpen && <ChatPanel commonsId={commonsId}/>}
-        <Button style={chatButtonStyle} onClick={toggleChatWindow} data-testid="playpage-chat-toggle">
-          {!!isChatOpen ? '▼' : '▲'}
-        </Button>
+        <ChatToggle toggleChatWindow={toggleChatWindow} isChatOpen={isChatOpen} />
       </div>
     </div>
   )
