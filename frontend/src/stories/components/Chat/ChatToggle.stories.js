@@ -13,7 +13,9 @@ const Template = (args) => {
     )
 };
 
-const toggleChatWindow = () => {}
+const toggleChatWindow = () => {
+    window.alert("chat toggle clicked");
+}
 
 export const Message = Template.bind({});
 
