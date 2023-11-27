@@ -1,6 +1,7 @@
 import Button from "react-bootstrap/Button";
+import ChatSymbol from "assets/ChatSymbol.png";
 
-const chatButtonStyle = {
+const chatContainerStyle = {
     width: '40px',
     height: '40px',
     borderRadius: '50%',
@@ -11,16 +12,17 @@ const chatButtonStyle = {
     right: '20px',
   };
 
-
-const ChatToggle = ({ toggleChatWindow, isChatOpen }) => 
+const ChatToggle = ({ toggleChatWindow}) => 
 {
+    
     return (
         <Button
-            style={chatButtonStyle}
+            style={chatContainerStyle}
             onClick={toggleChatWindow}
             data-testid="ChatToggle"
         >
-            {!isChatOpen? '▲' : '▼'}
+
+            <img src={ChatSymbol} style = {chatContainerStyle} />
         </Button>
     );
 }
