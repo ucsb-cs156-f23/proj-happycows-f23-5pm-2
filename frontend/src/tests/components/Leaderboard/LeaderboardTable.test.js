@@ -114,11 +114,13 @@ describe("LeaderboardTable tests", () => {
     
   test("renders the correct sorted wealth with click the button", () => {
     const currentUser = currentUserFixtures.adminUser;
-    render(<QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
-      </MemoryRouter>
-    </QueryClientProvider>);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
 
     fireEvent.click(screen.getByText('Total Wealth'))
     const allTotalWealthCellsInc = screen.getAllByText(/\$\d+(,\d{3})*(\.\d{2})?/);
@@ -136,5 +138,6 @@ describe("LeaderboardTable tests", () => {
     expect(allTotalWealthCellsDec[1]).toHaveTextContent("$1,000.00");
     expect(allTotalWealthCellsDec[0]).toHaveTextContent("$100,000.00");
   });
+
 });
 
