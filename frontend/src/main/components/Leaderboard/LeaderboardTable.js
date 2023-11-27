@@ -26,7 +26,6 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             },
             sortType: 
                 (rowA,rowB,_id,_desc)=>{
-                    // const diff = parseFloat() - parseFloat(rowB.original.totalWealth);
                     return rowA.original.totalWealth - rowB.original.totalWealth;
                 }
             ,
