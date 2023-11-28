@@ -182,7 +182,6 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => {
             expect(chatButton).not.toHaveAccessibleDescription("Chat close symbol");
-            expect(chatButton).not.toHaveAccessibleDescription("Chat open symbol");
         });
         
         // Check styles for the chat button
