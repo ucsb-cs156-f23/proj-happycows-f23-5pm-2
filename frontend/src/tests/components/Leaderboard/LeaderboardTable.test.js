@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
+import currentUserFixtures from "fixtures/currentUserFixtures";
 import LeaderboardTable from "main/components/Leaderboard/LeaderboardTable";
 import leaderboardFixtures from "fixtures/leaderboardFixtures";
 
