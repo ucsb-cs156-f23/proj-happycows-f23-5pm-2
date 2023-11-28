@@ -27,7 +27,7 @@ public class Commons {
     private double milkPrice;
     private double startingBalance;
     private LocalDateTime startingDate;
-    private LocalDateTime lastDate; // subject to change, see issue #18, linked to #11
+    private LocalDateTime lastDate;
     private boolean showLeaderboard;
     
     private int capacityPerUser;
