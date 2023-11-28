@@ -122,6 +122,7 @@ describe("LeaderboardTable tests", () => {
 
     
   test("renders the correct sorted wealth with click the button", () => {
+    // GitHub is complaining that currentUserFixtures is not defined, but it is imported, and all the other tests don't have this error
     const currentUser = currentUserFixtures.adminUser;
     render(
       <QueryClientProvider client={queryClient}>
