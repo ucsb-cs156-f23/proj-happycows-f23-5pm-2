@@ -22,7 +22,9 @@ public class Announcement {
     private long id;
 
     private long commonsId;
-    private LocalDateTime start;
+
+    @Builder.Default
+    private LocalDateTime start = LocalDateTime.now();
 
     @Column(nullable = true) // end datetime is optional
     private LocalDateTime end;
