@@ -50,10 +50,6 @@ public class Commons {
     // returns true if today's date is >= start date, and <= last day
     public boolean gameInProgress() {
         LocalDateTime todayDateTime = LocalDateTime.now();
-
-        // boolean output = ( (todayDateTime.isAfter(startingDate) || todayDateTime.equals(startingDate)) 
-        //             && (todayDateTime.isBefore(lastDate) || todayDateTime.equals(lastDate)) );
-
         boolean output = ( todayDateTime.isAfter(startingDate) && todayDateTime.isBefore(lastDate) );
         return output;
 
