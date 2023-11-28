@@ -3,8 +3,6 @@ package edu.ucsb.cs156.happiercows.entities;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-// import org.mockito.MockedStatic;
-// import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
@@ -29,24 +27,4 @@ public class CommonsTests {
     void test_gameInProgress_False_Already_Ended() throws Exception {
         assertEquals(false, Commons.builder().startingDate(dt2).lastDate(dt1).build().gameInProgress());
     }
-
-    // @Test
-    // void test_gameInProgress_True_Equals_Starting_Date() throws Exception {
-    //     String todayDateTime = LocalDateTime.now().toString();
-    //     LocalDateTime ldt = LocalDateTime.parse(todayDateTime);
-    //     try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
-    //         mockedLocalDateTime.when(LocalDateTime::now).thenReturn(ldt);
-    //         assertEquals(true, Commons.builder().startingDate(ldt).lastDate(dt3).build().gameInProgress());
-    //     }
-    // }
-
-    // @Test
-    // void test_gameInProgress_True_Equals_Last_Date() throws Exception {
-    //     String todayDateTime = LocalDateTime.now().toString();
-    //     LocalDateTime ldt = LocalDateTime.parse(todayDateTime);
-    //     try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
-    //         mockedLocalDateTime.when(LocalDateTime::now).thenReturn(ldt);
-    //         assertEquals(true, Commons.builder().startingDate(dt2).lastDate(ldt).build().gameInProgress());
-    //     }
-    // }
 }
