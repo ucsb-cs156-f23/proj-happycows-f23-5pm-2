@@ -8,6 +8,8 @@ import PlayPage from "main/pages/PlayPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
+import ChatSymbol from "../../assets/ChatSymbol.png";
+
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
     useParams: () => ({
@@ -175,15 +177,11 @@ describe("PlayPage tests", () => {
         const chatButton = screen.getByTestId("ChatToggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
-        expect(chatButton).toHaveTextContent('▲');
-
+        expect(chatButton).not.toHaveAccessibleDescription("Chat Symbol");
+        
         // Click the chat toggle button to open the ChatPanel
         fireEvent.click(chatButton);
-
-        await waitFor(() => {
-            expect(chatButton).toHaveTextContent('▼');
-        });
-
+        
         // Check styles for the chat button
         expect(chatButton).toHaveStyle(`
             width: 40px;

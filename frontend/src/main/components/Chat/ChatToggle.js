@@ -21,8 +21,7 @@ const ChatToggle = ({ toggleChatWindow}) =>
             onClick={toggleChatWindow}
             data-testid="ChatToggle"
         >
-
-            <img src={ChatSymbol} style = {chatContainerStyle} />
+            <img src={ChatSymbol} style = {chatContainerStyle} alt = "Chat Symbol"/>
         </Button>
     );
 }
