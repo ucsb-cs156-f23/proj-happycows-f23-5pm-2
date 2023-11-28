@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import { Container, CardGroup, Button } from "react-bootstrap";
+import { Container, CardGroup} from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsOverview from "main/components/Commons/CommonsOverview";
@@ -13,6 +12,7 @@ import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
 import ChatPanel from "main/components/Chat/ChatPanel";
+import ChatToggle from "main/components/Chat/ChatToggle";
 
 export default function PlayPage() {
 
@@ -88,10 +88,8 @@ export default function PlayPage() {
     mutationbuy.mutate(userCommons)
   };
 
-
-  const onSuccessSell = () => {
-    toast(`Cow sold!`);
-  }
+const onSuccessSell = () => {
+};
 
   // Stryker disable all 
   const objectToAxiosParamsSell = (newUserCommons) => ({
@@ -124,16 +122,6 @@ export default function PlayPage() {
     setIsChatOpen((prevState) => !prevState);
   };
 
-  const chatButtonStyle = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: 'lightblue',
-    color: 'black',
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-  };
 
   const chatContainerStyle = {
     width: '550px',
@@ -160,9 +148,7 @@ export default function PlayPage() {
       </BasicLayout>
       <div style={chatContainerStyle} data-testid="playpage-chat-div">
         {!!isChatOpen && <ChatPanel commonsId={commonsId}/>}
-        <Button style={chatButtonStyle} onClick={toggleChatWindow} data-testid="playpage-chat-toggle">
-          {!!isChatOpen ? '▼' : '▲'}
-        </Button>
+        <ChatToggle toggleChatWindow={toggleChatWindow} isChatOpen={isChatOpen} />
       </div>
     </div>
   )

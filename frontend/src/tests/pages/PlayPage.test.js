@@ -94,7 +94,6 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
 
-        expect(mockToast).toBeCalledWith("Cow sold!");
     });
 
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
@@ -133,11 +132,11 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+            expect(screen.getByTestId("ChatToggle")).toBeInTheDocument();
         });
     
         // Make sure the chat toggle button is visible
-        const chatToggleButton = screen.getByTestId("playpage-chat-toggle");
+        const chatToggleButton = screen.getByTestId("ChatToggle");
         expect(chatToggleButton).toBeInTheDocument();
         
         // Make sure the ChatPanel is not visible initially
@@ -170,10 +169,10 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+            expect(screen.getByTestId("ChatToggle")).toBeInTheDocument();
         });
 
-        const chatButton = screen.getByTestId("playpage-chat-toggle");
+        const chatButton = screen.getByTestId("ChatToggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
         expect(chatButton).toHaveTextContent('▲');

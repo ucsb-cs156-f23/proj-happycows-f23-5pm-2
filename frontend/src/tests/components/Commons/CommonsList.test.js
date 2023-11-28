@@ -89,4 +89,8 @@ describe("CommonsList tests", () => {
             i++;
         })
     });
+    test('displays default message when there are no commons', () => {
+        render(<CommonsList commonList={[]} buttonText = {null} />);
+        expect(screen.getByText(/Currently, there are no commons available./i)).toBeInTheDocument();
+    });
 });
