@@ -1,7 +1,7 @@
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
-
+import { useEffect } from "react";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
@@ -16,6 +16,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         register,
         formState: {errors},
         handleSubmit,
+        reset,
     } = useForm(
         // modifiedCommons is guaranteed to be defined (initialCommons or {})
         {defaultValues: modifiedCommons}
@@ -29,17 +30,51 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         },
     );
 
+    const {data: values} = useBackend(
+        "/api/commons/defaults", {
+            method: "GET",
+            url: "/api/commons/defaults",
+        },
+    );
+
+    
+    useEffect(() => {
+        //if no default values or must use initial commons, immediately return and do not use defaults
+        if (!values || initialCommons) {
+            return;
+        }
+        //replace and reset the default values given by the defaults endpoint
+        const {
+            startingBalance,
+            cowPrice,
+            milkPrice,
+            degradationRate,
+            carryingCapacity,
+            capacityPerUser,
+            aboveCapacityHealthUpdateStrategy,
+            belowCapacityHealthUpdateStrategy,
+        } = values;
+    
+        reset({
+            startingBalance,
+            cowPrice,
+            milkPrice,
+            degradationRate,
+            carryingCapacity,
+            capacityPerUser,
+            aboveCapacityHealthUpdateStrategy,
+            belowCapacityHealthUpdateStrategy,
+        });
+    }, [values, initialCommons, reset]);
+
     const testid = "CommonsForm";
 
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
     const DefaultVals = {
-        name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+        name: "",
+        startingDate: today,
     };
-
-    const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
-    const aboveStrategy = initialCommons?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -95,7 +130,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 data-testid={`${testid}-startingBalance`}
                                 type="number"
                                 step="0.01"
-                                defaultValue={DefaultVals.startingBalance}
+                                defaultValue={values?.startingBalance}
                                 isInvalid={!!errors.startingBalance}
                                 {...register("startingBalance", {
                                     valueAsNumber: true,
@@ -125,7 +160,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 id="cowPrice"
                                 type="number"
                                 step="0.01"
-                                defaultValue={DefaultVals.cowPrice}
+                                defaultValue={values?.cowPrice}
                                 isInvalid={!!errors.cowPrice}
                                 {...register("cowPrice", {
                                     valueAsNumber: true,
@@ -155,7 +190,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 id="milkPrice"
                                 type="number"
                                 step="0.01"
-                                defaultValue={DefaultVals.milkPrice}
+                                defaultValue={values?.milkPrice}
                                 isInvalid={!!errors.milkPrice}
                                 {...register("milkPrice", {
                                     valueAsNumber: true,
@@ -182,20 +217,21 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             overlay={<Tooltip>This number controls the rate at which cow health decreases when the number of cows in the commons is greater than the effective carrying capacity. The way in which the number is used depends on the selected Health Update Formulas below.</Tooltip>}
                             delay='100'
                         >
-                        <Form.Control
-                            data-testid={`${testid}-degradationRate`}
-                            id="degradationRate"
-                            type="number"
-                            step="0.0001"
-                            defaultValue={DefaultVals.degradationRate}
+                            <Form.Control
+                                data-testid={`${testid}-degradationRate`}
+                                id="degradationRate"
+                                type="number"
+                                step="0.0001"
+                                defaultValue={values?.degradationRate}
 
-                            isInvalid={!!errors.degradationRate}
-                            {...register("degradationRate", {
-                                valueAsNumber: true,
-                                required: "Degradation rate is required",
-                                min: {value: 0, message: "Degradation rate must be ≥ 0"},
-                            })}
-                        /></OverlayTrigger>
+                                isInvalid={!!errors.degradationRate}
+                                {...register("degradationRate", {
+                                    valueAsNumber: true,
+                                    required: "Degradation rate is required",
+                                    min: {value: 0, message: "Degradation rate must be ≥ 0"},
+                                })}
+                            />
+                        </OverlayTrigger>
                         <Form.Control.Feedback type="invalid">
                             {errors.degradationRate?.message}
                         </Form.Control.Feedback>
@@ -209,19 +245,20 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             overlay={<Tooltip>This is the minimum carrying capacity for the commons; at least this many cows may graze in the commons regardless of the number of players. If this number is zero, then only the Capacity Per User is used to determine the actual carrying capacity.</Tooltip>}
                             delay='100'
                         >
-                        <Form.Control
-                            data-testid={`${testid}-carryingCapacity`}
-                            id="carryingCapacity"
-                            type="number"
-                            step="1"
-                            defaultValue={DefaultVals.carryingCapacity}
-                            isInvalid={!!errors.carryingCapacity}
-                            {...register("carryingCapacity", {
-                                valueAsNumber: true,
-                                required: "Carrying capacity is required",
-                                min: {value: 1, message: "Carrying Capacity must be ≥ 1"},
-                            })}
-                        /></OverlayTrigger>
+                            <Form.Control
+                                data-testid={`${testid}-carryingCapacity`}
+                                id="carryingCapacity"
+                                type="number"
+                                step="1"
+                                defaultValue={values?.carryingCapacity}
+                                isInvalid={!!errors.carryingCapacity}
+                                {...register("carryingCapacity", {
+                                    valueAsNumber: true,
+                                    required: "Carrying capacity is required",
+                                    min: {value: 1, message: "Carrying Capacity must be ≥ 1"},
+                                })}
+                            />
+                        </OverlayTrigger>
                         <Form.Control.Feedback type="invalid">
                             {errors.carryingCapacity?.message}
                         </Form.Control.Feedback>
@@ -235,17 +272,19 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             overlay={<Tooltip>When this number is greater than zero, the commons will be able to support at least this many cows per farmer; that is, the effective carrying capacity of the commons is the value of Carrying Capacity, or Capacity Per User times the number of Farmers, whichever is greater. If this number is zero, then the Carrying Capacity is fixed regardless of the number of users.</Tooltip>}
                             delay='100'
                         >
-                        <Form.Control
-                            data-testid={`${testid}-capacityPerUser`}
-                            id="capacityPerUser"
-                            type="number"
-                            step="1"
-                            isInvalid={!!errors.capacityPerUser}
-                            {...register("capacityPerUser", {
-                                valueAsNumber: true,
-                                required: "Capacity Per User is required",
-                            })}
-                        /></OverlayTrigger>
+                            <Form.Control
+                                data-testid={`${testid}-capacityPerUser`}
+                                id="capacityPerUser"
+                                type="number"
+                                step="1"
+                                defaultValue={values?.capacityPerUser}
+                                isInvalid={!!errors.capacityPerUser}
+                                {...register("capacityPerUser", {
+                                    valueAsNumber: true,
+                                    required: "Capacity Per User is required",
+                                })}
+                            />
+                        </OverlayTrigger>
                         <Form.Control.Feedback type="invalid">
                             {errors.capacityPerUser?.message}
                         </Form.Control.Feedback>
@@ -257,21 +296,22 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
                 <OverlayTrigger
-                            placement="top"
+                            placement="bottom"
                             overlay={<Tooltip>This is the starting date of the game; before this date, the jobs to calculate statistics, milk the cows, and report profits, etc. will not be run on this commons.</Tooltip>}
                             delay='100'
-                        >
-                <Form.Control
-                    data-testid={`${testid}-startingDate`}
-                    id="startingDate"
-                    type="date"
-                    defaultValue={DefaultVals.startingDate}
-                    isInvalid={!!errors.startingDate}
-                    {...register("startingDate", {
-                        valueAsDate: true,
-                        validate: {isPresent: (v) => !isNaN(v)},
-                    })}
-                /></OverlayTrigger>
+                >
+                    <Form.Control
+                        data-testid={`${testid}-startingDate`}
+                        id="startingDate"
+                        type="date"
+                        defaultValue={DefaultVals.startingDate}
+                        isInvalid={!!errors.startingDate}
+                        {...register("startingDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                </OverlayTrigger>
                 <Form.Control.Feedback type="invalid">
                     {errors.startingDate?.message}
                 </Form.Control.Feedback>
@@ -287,7 +327,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <HealthUpdateStrategiesDropdown
                         formName={"aboveCapacityHealthUpdateStrategy"}
                         displayName={"When above capacity"}
-                        initialValue={aboveStrategy}
+                        initialValue={values?.aboveCapacityHealthUpdateStrategy}
                         register={register}
                         healthUpdateStrategies={healthUpdateStrategies}
                     />
@@ -297,7 +337,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <HealthUpdateStrategiesDropdown
                         formName={"belowCapacityHealthUpdateStrategy"}
                         displayName={"When below capacity"}
-                        initialValue={belowStrategy}
+                        initialValue={values?.belowCapacityHealthUpdateStrategy}
                         register={register}
                         healthUpdateStrategies={healthUpdateStrategies}
                     />
@@ -311,12 +351,13 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             overlay={<Tooltip>When checked, regular users will have access to the leaderboard for this commons. When unchecked, only admins can see the leaderboard for this commons.</Tooltip>}
                             delay='100'
                 >
-                <Form.Check
-                    data-testid={`${testid}-showLeaderboard`}
-                    type="checkbox"
-                    id="showLeaderboard"
-                    {...register("showLeaderboard")}
-                /></OverlayTrigger>
+                    <Form.Check
+                        data-testid={`${testid}-showLeaderboard`}
+                        type="checkbox"
+                        id="showLeaderboard"
+                        {...register("showLeaderboard")}
+                    />
+                </OverlayTrigger>
             </Form.Group>
             <Row className="mb-5">
                 <Button type="submit"
