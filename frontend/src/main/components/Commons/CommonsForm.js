@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
@@ -69,12 +70,47 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const testid = "CommonsForm";
 
+    const convertToDateTimeLocalString = (date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+      
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+      }
+
+    //Default values for start date and end date
     const curr = new Date();
-    const today = curr.toISOString().split('T')[0];
+    const today = convertToDateTimeLocalString(curr);
+
+    const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
+    const quarterLaterString = convertToDateTimeLocalString(quarterLater);
+    
     const DefaultVals = {
         name: "",
         startingDate: today,
+        lastDate: quarterLaterString
     };
+
+    const [commonsStartDate, setCommonsDate] = useState(today)
+
+    const checkGreaterDate = (date1, date2) => {
+        if (!date1 || !date2) {
+            return false;
+        }
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        return d1 >= d2;
+    }
+
+    const handleChange = (e) => {
+        const {id, value} = e.target;
+        if (id === "startingDate") {
+            setCommonsDate(value);
+        }
+        window.console.log(commonsStartDate);
+    }
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -292,7 +328,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-
+            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r2`}>
+            <Col md={4}>
             <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
                 <OverlayTrigger
@@ -303,12 +340,13 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-startingDate`}
                         id="startingDate"
-                        type="date"
+                        type="datetime-local"
                         defaultValue={DefaultVals.startingDate}
                         isInvalid={!!errors.startingDate}
+                        onBlurCapture = {e => handleChange(e)}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {isPresent: (v) => !isNaN(v)},
+                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, today) || "Starting date must be ≥ today"}
                         })}
                     />
                 </OverlayTrigger>
@@ -316,8 +354,34 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     {errors.startingDate?.message}
                 </Form.Control.Feedback>
             </Form.Group>
+            </Col>
             
-
+            <Col md={4}>
+            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                <Form.Label htmlFor="lastDate">Last Date</Form.Label>
+                <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>This is the last date of the game; after this date, the jobs to calculate statistics, milk the cows, and report profits, etc. will not be run on this commons.</Tooltip>}
+                            delay='100'
+                >
+                    <Form.Control
+                        data-testid={`${testid}-lastDate`}
+                        id="lastDate"
+                        type="datetime-local"
+                        defaultValue={DefaultVals.lastDate}
+                        isInvalid={!!errors.lastDate}
+                        {...register("lastDate", {
+                            valueAsDate: true,
+                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, commonsStartDate) || "Last date must be ≥ starting date"}
+                        })}
+                    />
+                </OverlayTrigger>
+                <Form.Control.Feedback type="invalid">
+                    {errors.lastDate?.message}
+                </Form.Control.Feedback>
+            </Form.Group>
+            </Col>
+            </Row>
 
 
             <h5>Health update formula</h5>
