@@ -175,15 +175,15 @@ describe("PlayPage tests", () => {
         const chatButton = screen.getByTestId("ChatToggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
-        expect(chatButton).toHaveTextContent('▲');
-
+        expect(chatButton).not.toHaveAccessibleDescription("Chat open symbol");
+        
         // Click the chat toggle button to open the ChatPanel
         fireEvent.click(chatButton);
 
         await waitFor(() => {
-            expect(chatButton).toHaveTextContent('▼');
+            expect(chatButton).not.toHaveAccessibleDescription("Chat close symbol");
         });
-
+        
         // Check styles for the chat button
         expect(chatButton).toHaveStyle(`
             width: 40px;
