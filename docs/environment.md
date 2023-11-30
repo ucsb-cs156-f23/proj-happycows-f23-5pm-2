@@ -13,3 +13,5 @@ To change these values in the .env file, simply add the variable name={new value
 Ex. HAPPYCOWS_STARTING_BALANCE=50
 
 To change these values from the application.properties file, just change the value on the line for the desired variable
+
+IMPORTANT: although the values can be changed in application.properties and .env file, the values in .env take priority
