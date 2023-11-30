@@ -1261,6 +1261,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .milkPrice(milkPrice)
                 .startingBalance(startingBalance)
                 .startingDate(LocalDateTime.now().withNano(0))
+                .lastDate(LocalDateTime.now().plusDays(30).withNano(0))
                 .degradationRate(degradationRate)
                 .showLeaderboard(false)
                 .capacityPerUser(capacityPerUser)
