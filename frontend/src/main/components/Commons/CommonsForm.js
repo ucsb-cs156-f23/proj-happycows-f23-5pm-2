@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
@@ -70,6 +70,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const testid = "CommonsForm";
 
+    /*
     const convertToDateTimeLocalString = (date) => {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -80,6 +81,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         return `${year}-${month}-${day}T${hours}:${minutes}`;
       }
 
+      
     //Default values for start date and end date
     const curr = new Date();
     const today = convertToDateTimeLocalString(curr);
@@ -110,7 +112,17 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             setCommonsDate(value);
         }
         window.console.log(commonsStartDate);
-    }
+    }*/
+
+    const curr = new Date();
+    const today = curr.toISOString().split('T')[0];
+    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().split('T')[0];
+
+    const DefaultVals = {
+        name: "",
+        startingDate: today,
+        lastDate: onemonthfromtoday
+    };
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -340,13 +352,16 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-startingDate`}
                         id="startingDate"
-                        type="datetime-local"
+                        type="date"
                         defaultValue={DefaultVals.startingDate}
                         isInvalid={!!errors.startingDate}
-                        onBlurCapture = {e => handleChange(e)}
+                        //onBlurCapture = {e => handleChange(e)}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, today) || "Starting date must be ≥ today"}
+                            validate: {
+                                isPresent: (v) =>
+                                    !isNaN(v) || "Starting date is required",
+                            },
                         })}
                     />
                 </OverlayTrigger>
@@ -367,12 +382,15 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-lastDate`}
                         id="lastDate"
-                        type="datetime-local"
+                        type="date"
                         defaultValue={DefaultVals.lastDate}
                         isInvalid={!!errors.lastDate}
                         {...register("lastDate", {
                             valueAsDate: true,
-                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, commonsStartDate) || "Last date must be ≥ starting date"}
+                            validate: {
+                                isPresent: (v) =>
+                                    !isNaN(v) || "Last date is required",
+                            },
                         })}
                     />
                 </OverlayTrigger>

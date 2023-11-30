@@ -46,6 +46,7 @@ describe("CommonsForm tests", () => {
       /Cow Price/,
       /Milk Price/,
       /Starting Date/,
+      /Last Date/,
       /Degradation Rate/,
       /Capacity Per User/,
       /Carrying Capacity/,
@@ -108,6 +109,7 @@ describe("CommonsForm tests", () => {
     fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "-1" } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "-1" } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: NaN } });
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: NaN } });
     fireEvent.click(submitButton);
 
     //Await
@@ -122,6 +124,7 @@ describe("CommonsForm tests", () => {
       "CommonsForm-cowPrice",
       "CommonsForm-startingBalance",
       "CommonsForm-startingDate",
+      "CommonsForm-lastDate",
 
     ].forEach(
       (item) => {
@@ -149,23 +152,13 @@ describe("CommonsForm tests", () => {
 
   it("Check Default Values and correct styles", async () => {
 
-    const convertToDateTimeLocalString = (date) => {
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
-      const hours = date.getHours().toString().padStart(2, "0");
-      const minutes = date.getMinutes().toString().padStart(2, "0");
-    
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-
-    //Default values for start date and end date
     const curr = new Date();
-    const today = convertToDateTimeLocalString(curr);
+    const today = curr.toISOString().split('T')[0];
+    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().split('T')[0];
     
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday
     };
 
     axiosMock
@@ -187,7 +180,7 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
     [
       "name", "degradationRate", "carryingCapacity",
-      "milkPrice","cowPrice","startingBalance","startingDate",
+      "milkPrice","cowPrice","startingBalance","startingDate", "lastDate"
     ].forEach(
         (item) => {
           const element = screen.getByTestId(`CommonsForm-${item}`);
@@ -294,26 +287,18 @@ describe("CommonsForm tests", () => {
     );
 
     expect(await screen.findByText(/Id/)).toBeInTheDocument();
-    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate.split("T")[0]);
+    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate);
+    expect(screen.getByTestId("CommonsForm-lastDate")).toHaveValue(commonsFixtures.threeCommons[0].lastDate);
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
-    const convertToDateTimeLocalString = (date) => {
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
-      const hours = date.getHours().toString().padStart(2, "0");
-      const minutes = date.getMinutes().toString().padStart(2, "0");
-    
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-
-    //Default values for start date and end date
     const curr = new Date();
-    const today = convertToDateTimeLocalString(curr);
+    const today = curr.toISOString().substr(0, 10);
+    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().substr(0, 10);
+
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today,
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday,
       aboveCapacityHealthUpdateStrategy: "Linear", belowCapacityHealthUpdateStrategy: "Constant"
     };
 
@@ -336,7 +321,7 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
     [
       "name", "degradationRate", "carryingCapacity",
-      "milkPrice","cowPrice","startingBalance","startingDate",
+      "milkPrice","cowPrice","startingBalance","startingDate", "lastDate"
     ].forEach(
         (item) => {
           const element = screen.getByTestId(`CommonsForm-${item}`);
