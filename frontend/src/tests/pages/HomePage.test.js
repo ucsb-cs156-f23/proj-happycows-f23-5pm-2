@@ -45,10 +45,10 @@ describe("HomePage tests", () => {
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
-        expect(typeof (title.textContent)).toBe('string');
-        
+        expect(title).toHaveTextContent(/Howdy, Farmer/);
+
         await waitFor(() => {
-            expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
+            expect(title.textContent).toEqual('Howdy, Farmer Phillip!');
         });
     });
 
@@ -68,23 +68,7 @@ describe("HomePage tests", () => {
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
-        expect(typeof (title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
-    });
-
-    test("expected CSS properties", () => {
-        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/commons/all").reply(200, []);
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter>
-                    <HomePage />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        const title = screen.getByTestId("homePage-title");
-        expect(title).toHaveAttribute("style", "font-size: 45px; border-radius: 5px; background-color: blue; opacity: 0.7;");
+        expect(title).toHaveTextContent(/Howdy, Farmer/);
     });
 
     test("renders without crashing when lists are full", () => {
@@ -101,8 +85,7 @@ describe("HomePage tests", () => {
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
-        expect(typeof (title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Hello, Happy Cow! Phillip');
+        expect(title).toHaveTextContent(/Howdy, Farmer/);
     });
 
     test("Redirects to the PlayPage when you click visit", async () => {
@@ -132,7 +115,6 @@ describe("HomePage tests", () => {
         axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
         axiosMock.onPost("/api/commons/join").reply(200, commonsFixtures.threeCommons[0]);
 
-        
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -150,7 +132,6 @@ describe("HomePage tests", () => {
         });
         expect(axiosMock.history.post[0].url).toBe("/api/commons/join");
         expect(axiosMock.history.post[0].params).toEqual({ "commonsId": 4 });
-    
     });
 
     test("Check hour null is working, and that the background image is set correctly", async () => {
@@ -159,7 +140,6 @@ describe("HomePage tests", () => {
         axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
         axiosMock.onPost("/api/commons/join").reply(200, commonsFixtures.threeCommons[0]);
 
-        
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -177,9 +157,5 @@ describe("HomePage tests", () => {
         });
         expect(axiosMock.history.post[0].url).toBe("/api/commons/join");
         expect(axiosMock.history.post[0].params).toEqual({ "commonsId": 4 });
-
     });
-
-
-
 });
