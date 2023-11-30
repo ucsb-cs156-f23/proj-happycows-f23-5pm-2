@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react"
-import { Container, Row, Col } from "react-bootstrap";
+mport { useState, useEffect } from "react";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import styled, { keyframes } from 'styled-components';
+
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsList from "main/components/Commons/CommonsList";
@@ -9,71 +11,84 @@ import { useCurrentUser } from "main/utils/currentUser";
 import { commonsNotJoined } from "main/utils/commonsUtils";
 import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
-export default function HomePage({hour=null}) {
-  // Stryker disable next-line all: it is acceptable to exclude useState calls from mutation testing
-  const [commonsJoined, setCommonsJoined] = useState([]);
-  const { data: currentUser } = useCurrentUser();
-
-  // Stryker disable all : it is acceptable to exclude useBackend calls from mutation testing
-  const { data: commons } =
-    useBackend(
-      ["/api/commons/all"],
-      { url: "/api/commons/all" },
-      []
-    );
-  // Stryker restore all
-
-  const objectToAxiosParams = (newCommonsId) => ({
-    url: "/api/commons/join",
-    method: "POST",
-    params: {
-      commonsId: newCommonsId
+// Define keyframes for gradient animation
+const animateGradient = keyframes`
+    to {
+        background-position: 150%;
     }
-  });
+`;
 
-  // Stryker disable all : it is acceptable to exclude useBackendMutation calls from mutation testing
-  const mutation = useBackendMutation(
-    objectToAxiosParams,
-    {},
-    ["/api/currentUser"]
-  );
-  // Stryker restore all
+// Styled component for gradient animation
+const GradientText = styled.div`
+    animation: ${animateGradient} 6s infinite alternate-reverse;
+    background-image: linear-gradient(to left, #464cb8, rgb(127, 165, 25));
+    -webkit-background-clip: text;
+    color: transparent;
+    text-align: center;
+    font-size: 40px;
+`;
 
+export default function HomePage({hour=null}) {
+    const [commonsJoined, setCommonsJoined] = useState([]);
+    const { data: currentUser } = useCurrentUser();
 
-  // Stryker disable all : TODO: restructure this code to avoid the need for this disable
-  useEffect(
-    () => {
-      if (currentUser?.root?.user?.commons) {
-        setCommonsJoined(currentUser.root.user.commons);
-      }
-    }, [currentUser]
-  );
+    const { data: commons } =
+        useBackend(
+            ["/api/commons/all"],
+            { url: "/api/commons/all" },
+            []
+        );
 
-  const firstName = (currentUser?.root?.user?.givenName) || "";
-  const time = (hour===null) ? new Date().getHours() : hour;
-  const Background = getBackgroundImage(time);
+    const objectToAxiosParams = (newCommonsId) => ({
+        url: "/api/commons/join",
+        method: "POST",
+        params: {
+            commonsId: newCommonsId
+        }
+    });
 
-  // Stryker restore all
+    const mutation = useBackendMutation(
+        objectToAxiosParams,
+        {},
+        ["/api/currentUser"]
+    );
 
-  let navigate = useNavigate();
-  const visitButtonClick = (id) => { navigate("/play/" + id) };
+    useEffect(
+        () => {
+            if (currentUser?.root?.user?.commons) {
+                setCommonsJoined(currentUser.root.user.commons);
+            }
+        }, [currentUser]
+    );
 
-  //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
-  const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
-  
-  // Stryker disable all : TODO: restructure this code to avoid the need for this disable
-  return (
-    <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
-      <BasicLayout>
-        <h1 data-testid="homePage-title" style={{ fontSize: "45px", borderRadius: "5px", backgroundColor: "blue", opacity: ".7" }} className="text-center border-0 my-3">Hello, Happy Cow! {firstName}</h1>
-        <Container>
-          <Row>
-            <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
-            <Col sm><CommonsList commonList={commonsNotJoinedList} title="Join A New Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
-          </Row>
-        </Container>
-      </BasicLayout>
-    </div>
-  )
-  // Stryker restore all
+    const firstName = (currentUser?.root?.user?.givenName) || "";
+    const time = (hour === null) ? new Date().getHours() : hour;
+    const Background = getBackgroundImage(time);
+
+    let navigate = useNavigate();
+    const visitButtonClick = (id) => { navigate("/play/" + id) };
+
+    const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
+
+    return (
+        <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
+            <BasicLayout>
+                <Card
+                    style={{ opacity: ".7" }}
+                    className="my-3 border-0"
+                >
+                    <GradientText data-testid="homePage-title">
+                        Howdy, Farmer {firstName}!
+                    </GradientText>
+                </Card>
+                <Container>
+                    <Row>
+                        <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
+                        <Col sm><CommonsList commonList={commonsNotJoinedList} title="Join A New Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
+                    </Row>
+                </Container>
+            </BasicLayout>
+        </div>
+    );
 }
+
