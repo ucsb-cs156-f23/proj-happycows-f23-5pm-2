@@ -328,7 +328,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r2`}>
+            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r4`}>
             <Col md={4}>
             <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
@@ -357,7 +357,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             </Col>
             
             <Col md={4}>
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r5`}>
                 <Form.Label htmlFor="lastDate">Last Date</Form.Label>
                 <OverlayTrigger
                             placement="bottom"

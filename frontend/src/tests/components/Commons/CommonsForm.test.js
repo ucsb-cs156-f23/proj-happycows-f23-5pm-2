@@ -149,8 +149,20 @@ describe("CommonsForm tests", () => {
 
   it("Check Default Values and correct styles", async () => {
 
+    const convertToDateTimeLocalString = (date) => {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+    
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    //Default values for start date and end date
     const curr = new Date();
-    const today = curr.toISOString().substr(0, 10);
+    const today = convertToDateTimeLocalString(curr);
+    
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today
@@ -187,8 +199,11 @@ describe("CommonsForm tests", () => {
     expect(screen.getByTestId("CommonsForm-r0")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r1")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r2")).toHaveStyle('width: 80%');
+    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('width: 300px');
     expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('height: 50px');
+    expect(screen.getByTestId("CommonsForm-r5")).toHaveStyle('width: 300px');
+    expect(screen.getByTestId("CommonsForm-r5")).toHaveStyle('height: 50px');
     expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveStyle('width: 30%');
   });
 
@@ -283,8 +298,19 @@ describe("CommonsForm tests", () => {
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
+    const convertToDateTimeLocalString = (date) => {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+    
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    //Default values for start date and end date
     const curr = new Date();
-    const today = curr.toISOString().substr(0, 10);
+    const today = convertToDateTimeLocalString(curr);
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today,
