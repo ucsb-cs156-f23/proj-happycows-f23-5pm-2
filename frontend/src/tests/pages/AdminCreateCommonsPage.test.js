@@ -137,8 +137,8 @@ describe("AdminCreateCommonsPage tests", () => {
         expect(mockToast).toBeCalledWith(<div>Commons successfully created!
             <br />id: 5
             <br />name: My New Commons
-            <br />startingDate: 2022-03-05
-            <br />lastDate: 2023-12-31
+            <br />startDate: 2022-03-05
+            
             <br />cowPrice: 10
             <br />capacityPerUser: 10
             <br />carryingCapacity: 25

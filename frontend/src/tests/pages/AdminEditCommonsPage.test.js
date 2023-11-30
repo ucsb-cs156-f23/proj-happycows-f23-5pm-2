@@ -191,7 +191,7 @@ describe("AdminEditCommonsPage tests", () => {
                 "cowPrice": 200,
                 "milkPrice": 5,
                 "startingDate": "2022-03-07T00:00:00.000Z",
-                "lastDate": "2022-03-08T00:00:00.000Z",
+                //"lastDate": "2022-03-08T00:00:00.000Z",
                 "degradationRate": 40.3,
                 "capacityPerUser": 20,
                 "carryingCapacity": 200,
