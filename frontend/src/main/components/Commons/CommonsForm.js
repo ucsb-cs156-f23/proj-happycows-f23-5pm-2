@@ -8,9 +8,6 @@ import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrate
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     let modifiedCommons = initialCommons ? { ...initialCommons } : {};  // make a shallow copy of initialCommons
 
-    if (modifiedCommons.startingDate) {
-        modifiedCommons.startingDate = modifiedCommons.startingDate.split("T")[0];
-    }
 
     // Stryker disable all
     const {
@@ -69,50 +66,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     }, [values, initialCommons, reset]);
 
     const testid = "CommonsForm";
-
-    /*
-    const convertToDateTimeLocalString = (date) => {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0");
-        const day = date.getDate().toString().padStart(2, "0");
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-      
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
-      }
-
-      
-    //Default values for start date and end date
-    const curr = new Date();
-    const today = convertToDateTimeLocalString(curr);
-
-    const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
-    const quarterLaterString = convertToDateTimeLocalString(quarterLater);
-    
-    const DefaultVals = {
-        name: "",
-        startingDate: today,
-        lastDate: quarterLaterString
-    };
-
-    const [commonsStartDate, setCommonsDate] = useState(today)
-
-    const checkGreaterDate = (date1, date2) => {
-        if (!date1 || !date2) {
-            return false;
-        }
-        const d1 = new Date(date1);
-        const d2 = new Date(date2);
-        return d1 >= d2;
-    }
-
-    const handleChange = (e) => {
-        const {id, value} = e.target;
-        if (id === "startingDate") {
-            setCommonsDate(value);
-        }
-        window.console.log(commonsStartDate);
-    }*/
 
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
@@ -355,13 +308,9 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         type="date"
                         defaultValue={DefaultVals.startingDate}
                         isInvalid={!!errors.startingDate}
-                        //onBlurCapture = {e => handleChange(e)}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {
-                                isPresent: (v) =>
-                                    !isNaN(v) || "Starting date is required",
-                            },
+                            validate: {isPresent: (v) => !isNaN(v)},
                         })}
                     />
                 </OverlayTrigger>
@@ -387,10 +336,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         isInvalid={!!errors.lastDate}
                         {...register("lastDate", {
                             valueAsDate: true,
-                            validate: {
-                                isPresent: (v) =>
-                                    !isNaN(v) || "Last date is required",
-                            },
+                            validate: {isPresent: (v) => !isNaN(v)},
                         })}
                     />
                 </OverlayTrigger>
