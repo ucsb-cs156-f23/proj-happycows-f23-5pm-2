@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.controllers</a> &gt; <span class="el_source">AnnouncementController.java</span></div><h1>AnnouncementController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.controllers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
+import edu.ucsb.cs156.happiercows.entities.Announcement;
+import edu.ucsb.cs156.happiercows.repositories.AnnouncementRepository;
+
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+
+import org.springframework.security.core.Authentication;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Tag(name = &quot;Announcement&quot;)
+@RequestMapping(&quot;/api/announcement&quot;)
+@RestController
+<span class="nc" id="L33">@Slf4j</span>
+<span class="nc" id="L34">public class AnnouncementController extends ApiController{</span>
+
+    @Autowired
+    private AnnouncementRepository announcementRepository;
+
+    @Autowired
+    private UserCommonsRepository userCommonsRepository;
+
+    @Autowired
+    ObjectMapper mapper;
+
+    @Operation(summary = &quot;Get all announcements&quot;, description = &quot;Get all announcements associated with a specific commons. Used only by admins&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(&quot;/admin/get&quot;)
+    public ResponseEntity&lt;Object&gt; getAllChatMessages(@Parameter(description = &quot;The id of the common&quot;) @RequestParam Long commonsId,
+                                                    @Parameter(name=&quot;page&quot;) @RequestParam int page,
+                                                    @Parameter(name=&quot;size&quot;) @RequestParam int size) {
+        
+        // Return the list of chat messages
+<span class="nc" id="L53">        Page&lt;Announcement&gt; messages = announcementRepository.findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by(&quot;start&quot;).descending()));</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(messages);</span>
+    }
+    
+    @Operation(summary = &quot;Create an announcement&quot;, description = &quot;Create an announcement associated with a specific commons&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PostMapping(&quot;/admin/post&quot;)
+    public ResponseEntity&lt;Object&gt; createAnnouncement(@Parameter(description = &quot;The id of the associated common&quot;) @RequestParam Long commonsId,
+                                                    @Parameter(description = &quot;datetime to start showing the announcement, defaults to current datetime&quot;) @RequestParam LocalDateTime start,
+                                                    @Parameter(description = &quot;datetime to stop showing the announcement, can be left blank&quot;) @RequestParam LocalDateTime end,
+                                                    @Parameter(description = &quot;The announcement to be posted&quot;) @RequestParam String announcement) {
+        
+        // Create the announcement
+<span class="nc" id="L66">        Announcement announcementObj = Announcement.builder()</span>
+<span class="nc" id="L67">        .commonsId(commonsId)</span>
+<span class="nc" id="L68">        .start(start)</span>
+<span class="nc" id="L69">        .end(end)</span>
+<span class="nc" id="L70">        .announcement(announcement)</span>
+<span class="nc" id="L71">        .build();</span>
+
+        // Save the announcement
+<span class="nc" id="L74">        announcementRepository.save(announcementObj);</span>
+
+<span class="nc" id="L76">        return ResponseEntity.ok(announcementObj);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
