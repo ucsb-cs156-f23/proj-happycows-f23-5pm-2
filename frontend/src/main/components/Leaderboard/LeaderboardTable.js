@@ -19,10 +19,15 @@ export default function LeaderboardTable({ leaderboardUsers }) {
             accessor: (row, _rowIndex) => {
                 return USD.format(row.totalWealth);
             },
+            sortType: 
+                (rowA,rowB,_id,_desc)=>{
+                    return rowA.original.totalWealth - rowB.original.totalWealth;
+                }
+            ,
             Cell: (props) => {
                 return (
                   <div style={{textAlign: "right"}}>{props.value}</div>)
-                  },
+            },
         },
         {
             Header: 'Cows Owned',
