@@ -317,7 +317,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         isInvalid={!!errors.startingDate}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {isPresent: (v) => !isNaN(v) || "Starting date is required"}
+                            validate: {isPresent: (v) => !isNaN(v)}
                         })}
                     />
                 </OverlayTrigger>

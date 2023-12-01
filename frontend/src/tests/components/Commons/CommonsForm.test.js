@@ -18,6 +18,11 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate
 }));
 
+const curr = new Date();
+const today = convertToDateTimeLocalString(curr);
+const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
+const quarterLaterString = convertToDateTimeLocalString(quarterLater);
+
 describe("CommonsForm tests", () => {
   const axiosMock = new AxiosMockAdapter(axios);
 
@@ -167,10 +172,7 @@ describe("CommonsForm tests", () => {
 
   it("Check Default Values and correct styles", async () => {
 
-    const curr = new Date();
-    const today = convertToDateTimeLocalString(curr);
-    const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
-    const quarterLaterString = convertToDateTimeLocalString(quarterLater);
+    
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today,
@@ -312,7 +314,7 @@ describe("CommonsForm tests", () => {
     const today = convertToDateTimeLocalString(curr);
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday,
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: quarterLaterString,
       aboveCapacityHealthUpdateStrategy: "Linear", belowCapacityHealthUpdateStrategy: "Constant"
     };
 
