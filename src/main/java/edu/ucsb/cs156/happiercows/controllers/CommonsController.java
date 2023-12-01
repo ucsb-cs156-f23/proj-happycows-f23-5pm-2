@@ -24,7 +24,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -72,6 +71,7 @@ public class CommonsController extends ApiController {
                 .milkPrice(milkPrice)
                 .startingBalance(startingBalance)
                 .startingDate(LocalDateTime.now().withNano(0))
+                .lastDate(LocalDateTime.now().plusDays(30).withNano(0))
                 .degradationRate(degradationRate)
                 .showLeaderboard(false)
                 .capacityPerUser(capacityPerUser)
@@ -145,6 +145,7 @@ public class CommonsController extends ApiController {
         updated.setMilkPrice(params.getMilkPrice());
         updated.setStartingBalance(params.getStartingBalance());
         updated.setStartingDate(params.getStartingDate());
+        updated.setLastDate(params.getLastDate());
         updated.setShowLeaderboard(params.getShowLeaderboard());
         updated.setDegradationRate(params.getDegradationRate());
         updated.setCapacityPerUser(params.getCapacityPerUser());
@@ -210,6 +211,7 @@ public class CommonsController extends ApiController {
                 .milkPrice(params.getMilkPrice())
                 .startingBalance(params.getStartingBalance())
                 .startingDate(params.getStartingDate())
+                .lastDate(params.getLastDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .capacityPerUser(params.getCapacityPerUser())
