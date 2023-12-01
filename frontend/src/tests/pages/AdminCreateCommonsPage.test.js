@@ -37,6 +37,7 @@ describe("AdminCreateCommonsPage tests", () => {
     beforeEach(() => {
         axiosMock.reset();
         axiosMock.resetHistory();
+        console.log("abt to mock get current user");
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
 
@@ -55,6 +56,18 @@ describe("AdminCreateCommonsPage tests", () => {
 
         expect(await screen.findByText("Create Commons")).toBeInTheDocument();
     });
+
+
+    test("renders with correct default values for startingDate and lastDate", async () => {
+    });
+
+    render(
+        <QueryClientProvider client={queryClient}>
+            <MemoryRouter>
+                <AdminCreateCommonsPage />
+            </MemoryRouter>
+        </QueryClientProvider>
+    );
 
     test("When you fill in form and click submit, the right things happens", async () => {
         axiosMock.onPost("/api/commons/new").reply(200, {

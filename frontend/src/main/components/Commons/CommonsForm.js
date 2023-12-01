@@ -74,6 +74,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     const today = convertToDateTimeLocalString(curr);
     
     //last date is 70 days after today
+    // No need to test this line, as it is just a default value
     const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
     const quarterLaterString = convertToDateTimeLocalString(quarterLater);
     
@@ -316,7 +317,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         isInvalid={!!errors.startingDate}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {isPresent: (v) => !isNaN(v) || "Starting date must is required"}
+                            validate: {isPresent: (v) => !isNaN(v) || "Starting date is required"}
                         })}
                     />
                 </OverlayTrigger>

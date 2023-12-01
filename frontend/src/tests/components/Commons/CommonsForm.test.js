@@ -101,9 +101,23 @@ describe("CommonsForm tests", () => {
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "" } });
     fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "" } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: "" } });
+    fireEvent.click(submitButton);
     expect(await screen.findByText('Cow price is required')).toBeInTheDocument();
     expect(screen.getByText('Milk price is required')).toBeInTheDocument();
     expect(screen.getByText('Starting Balance is required')).toBeInTheDocument();
+    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+
+    const curr = new Date();
+    const today = convertToDateTimeLocalString(curr);
+    const yesterday = convertToDateTimeLocalString(new Date(curr.setDate(curr.getDate() - 1)));
+    // Check that equality operation works
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: today } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
+    fireEvent.click(submitButton);
+    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+
 
     //Reset to Invalid Values
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "-1" } });
@@ -155,9 +169,12 @@ describe("CommonsForm tests", () => {
 
     const curr = new Date();
     const today = convertToDateTimeLocalString(curr);
+    const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
+    const quarterLaterString = convertToDateTimeLocalString(quarterLater);
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today,
+      lastDate: quarterLaterString
     };
 
     axiosMock
@@ -179,7 +196,7 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
     [
       "name", "degradationRate", "carryingCapacity",
-      "milkPrice","cowPrice","startingBalance","startingDate", "lastDate"
+      "milkPrice","cowPrice","startingBalance","startingDate", 'lastDate'
     ].forEach(
         (item) => {
           const element = screen.getByTestId(`CommonsForm-${item}`);
@@ -191,9 +208,9 @@ describe("CommonsForm tests", () => {
     expect(screen.getByTestId("CommonsForm-r0")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r1")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r2")).toHaveStyle('width: 80%');
-    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('width: 80%');
-    expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('width: 300px');
-    expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('height: 50px');
+    expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('width: 80%');
+    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('width: 300px');
+    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('height: 50px');
     expect(screen.getByTestId("CommonsForm-r5")).toHaveStyle('width: 300px');
     expect(screen.getByTestId("CommonsForm-r5")).toHaveStyle('height: 50px');
     expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveStyle('width: 30%');

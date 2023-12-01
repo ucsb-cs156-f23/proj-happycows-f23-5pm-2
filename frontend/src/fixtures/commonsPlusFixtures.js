@@ -27,6 +27,7 @@ const commonsPlusFixtures = {
                 "milkPrice": 2.0,
                 "startingBalance": 10.0,
                 "startingDate": "2022-11-22T12:34:56",
+                "lastDate": "2022-11-22T12:34:56",
                 "endingDate": null,
                 "degradationRate": 0.01,
                 "showLeaderboard": true,
