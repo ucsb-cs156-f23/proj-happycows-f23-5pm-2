@@ -8,7 +8,7 @@ import AdminCreateCommonsPage from "main/pages/AdminCreateCommonsPage";
 import {apiCurrentUserFixtures} from "fixtures/currentUserFixtures";
 import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
 import healthUpdateStrategyListFixtures from "../../fixtures/healthUpdateStrategyListFixtures";
-import { convertToDateTimeLocalString } from "main/utils/commonsUtils.js";
+import { convertToDateTimeLocalString } from "main/utils/commonsUtils";
 
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
