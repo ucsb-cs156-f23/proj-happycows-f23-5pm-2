@@ -137,7 +137,6 @@ describe("AdminEditCommonsPage tests", () => {
 
             const nameField = screen.getByLabelText(/Commons Name/);
             const startingBalanceField = screen.getByLabelText(/Starting Balance/);
-            const lastDateField = screen.getByLabelText(/Last Date/);
             const cowPriceField = screen.getByLabelText(/Cow Price/);
             const milkPriceField = screen.getByLabelText(/Milk Price/);
             const startingDateField = screen.getByLabelText(/Starting Date/);

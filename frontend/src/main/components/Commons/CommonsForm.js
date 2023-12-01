@@ -312,7 +312,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-startingDate`}
                         id="startingDate"
-                        type="date"
+                        type="datetime-local"
                         defaultValue={DefaultVals.startingDate}
                         isInvalid={!!errors.startingDate}
                         {...register("startingDate", {
@@ -338,7 +338,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-lastDate`}
                         id="lastDate"
-                        type="date"
+                        type="datetime-local"
                         defaultValue={DefaultVals.lastDate}
                         isInvalid={!!errors.lastDate}
                         {...register("lastDate", {
