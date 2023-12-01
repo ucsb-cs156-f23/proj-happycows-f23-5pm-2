@@ -8,6 +8,7 @@ import AdminCreateCommonsPage from "main/pages/AdminCreateCommonsPage";
 import {apiCurrentUserFixtures} from "fixtures/currentUserFixtures";
 import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
 import healthUpdateStrategyListFixtures from "../../fixtures/healthUpdateStrategyListFixtures";
+import { convertToDateTimeLocalString } from "main/utils/commonsUtils.js";
 
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
@@ -62,8 +63,8 @@ describe("AdminCreateCommonsPage tests", () => {
             "cowPrice": 10,
             "milkPrice": 5,
             "startingBalance": 500,
-            "startingDate": "2022-03-05",
-            "lastDate": "2023-12-31",
+            "startingDate": "2022-03-05T00:00:00",
+            "lastDate" : "2022-05-14T00:00:00",
             "degradationRate": 30.4,
             "capacityPerUser": 10,
             "carryingCapacity": 25,
@@ -79,6 +80,18 @@ describe("AdminCreateCommonsPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
+        
+        // for use in starting and last date
+        const curr = new Date();
+        const todayUTC = new Date(curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000));
+        const todayUTCString = convertToDateTimeLocalString(todayUTC) + ":00.000Z";
+        const today = convertToDateTimeLocalString(curr);
+        const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
+        const quarterLaterString = convertToDateTimeLocalString(quarterLater);
+        const quarterLaterUTC = new Date(quarterLater.getTime() + (quarterLater.getTimezoneOffset() * 60 * 1000));
+        const quarterLaterUTCString = convertToDateTimeLocalString(quarterLaterUTC) + ":00.000Z";
+
+
 
         expect(await screen.findByText("Create Commons")).toBeInTheDocument();
 
@@ -86,7 +99,7 @@ describe("AdminCreateCommonsPage tests", () => {
         const startingBalanceField = screen.getByLabelText("Starting Balance");
         const cowPriceField = screen.getByLabelText("Cow Price");
         const milkPriceField = screen.getByLabelText("Milk Price");
-        const startDateField = screen.getByLabelText("Starting Date");
+        const startingDateField = screen.getByLabelText("Starting Date");
         const lastDateField = screen.getByLabelText("Last Date");
         const degradationRateField = screen.getByLabelText("Degradation Rate");
         const capacityPerUserField = screen.getByLabelText("Capacity Per User");
@@ -100,8 +113,8 @@ describe("AdminCreateCommonsPage tests", () => {
         fireEvent.change(startingBalanceField, { target: { value: '500' } })
         fireEvent.change(cowPriceField, { target: { value: '10' } })
         fireEvent.change(milkPriceField, { target: { value: '5' } })
-        fireEvent.change(startDateField, { target: { value: '2022-03-05' } })
-        fireEvent.change(lastDateField, { target: { value: '2023-12-31' } })
+        fireEvent.change(startingDateField, { target: { value: today } })
+        fireEvent.change(lastDateField, {target: { value: quarterLaterString } })
         fireEvent.change(degradationRateField, { target: { value: '30.4' } })
         fireEvent.change(capacityPerUserField, { target: { value: '10' } })
         fireEvent.change(carryingCapacityField, { target: { value: '25' } })
@@ -125,8 +138,8 @@ describe("AdminCreateCommonsPage tests", () => {
             degradationRate: 30.4,
             carryingCapacity: 25,
             capacityPerUser: 10,
-            startingDate: '2022-03-05T00:00:00.000Z',
-            lastDate: '2023-12-31T00:00:00.000Z',
+            startingDate: todayUTCString,
+            lastDate: quarterLaterUTCString,
             showLeaderboard: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
@@ -137,8 +150,8 @@ describe("AdminCreateCommonsPage tests", () => {
         expect(mockToast).toBeCalledWith(<div>Commons successfully created!
             <br />id: 5
             <br />name: My New Commons
-            <br />startDate: 2022-03-05
-            
+            <br />startingDate: 2022-03-05T00:00:00
+            <br />lastDate: 2022-05-14T00:00:00
             <br />cowPrice: 10
             <br />capacityPerUser: 10
             <br />carryingCapacity: 25

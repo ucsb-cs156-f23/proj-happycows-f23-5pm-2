@@ -6,6 +6,7 @@ import commonsFixtures from "fixtures/commonsFixtures"
 import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import healthUpdateStrategyListFixtures from "fixtures/healthUpdateStrategyListFixtures";
+import { convertToDateTimeLocalString } from "main/utils/commonsUtils";
 
 // Next line uses technique from https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
 import * as useBackendModule from "main/utils/useBackend";
@@ -153,9 +154,7 @@ describe("CommonsForm tests", () => {
   it("Check Default Values and correct styles", async () => {
 
     const curr = new Date();
-    const today = curr.toISOString().split('T')[0];
-    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().split('T')[0];
-    
+    const today = convertToDateTimeLocalString(curr);
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday
@@ -293,9 +292,7 @@ describe("CommonsForm tests", () => {
 
   it("renders correctly when an initialCommons is not passed in", async () => {
     const curr = new Date();
-    const today = curr.toISOString().substr(0, 10);
-    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().substr(0, 10);
-
+    const today = convertToDateTimeLocalString(curr);
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: onemonthfromtoday,

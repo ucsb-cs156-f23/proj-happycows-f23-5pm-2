@@ -70,6 +70,11 @@ export default function CommonsTable({ commons, currentUser }) {
             id: 'commons.startingDate'
         },
         {
+            Header: <span>Last<br />Date</span>,
+            accessor: row => String(row.commons.lastDate).slice(0,10),
+            id: 'commons.lastDate'
+        },
+        {
             Header: <small>Degrad.<br />Rate</small>,
             accessor: row => row.commons.degradationRate,
             id: 'commons.degradationRate'
