@@ -1,3 +1,4 @@
+import React from "react";
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
@@ -7,9 +8,6 @@ import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrate
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     let modifiedCommons = initialCommons ? { ...initialCommons } : {};  // make a shallow copy of initialCommons
 
-    if (modifiedCommons.startingDate) {
-        modifiedCommons.startingDate = modifiedCommons.startingDate.split("T")[0];
-    }
 
     // Stryker disable all
     const {
@@ -71,9 +69,12 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
+    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().split('T')[0];
+
     const DefaultVals = {
         name: "",
         startingDate: today,
+        lastDate: onemonthfromtoday
     };
 
     return (
@@ -292,7 +293,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-
+            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r4`}>
+            <Col md={4}>
             <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
                 <OverlayTrigger
@@ -316,8 +318,34 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     {errors.startingDate?.message}
                 </Form.Control.Feedback>
             </Form.Group>
+            </Col>
             
-
+            <Col md={4}>
+            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r5`}>
+                <Form.Label htmlFor="lastDate">Last Date</Form.Label>
+                <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>This is the last date of the game; after this date, the jobs to calculate statistics, milk the cows, and report profits, etc. will not be run on this commons.</Tooltip>}
+                            delay='100'
+                >
+                    <Form.Control
+                        data-testid={`${testid}-lastDate`}
+                        id="lastDate"
+                        type="date"
+                        defaultValue={DefaultVals.lastDate}
+                        isInvalid={!!errors.lastDate}
+                        {...register("lastDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                </OverlayTrigger>
+                <Form.Control.Feedback type="invalid">
+                    {errors.lastDate?.message}
+                </Form.Control.Feedback>
+            </Form.Group>
+            </Col>
+            </Row>
 
 
             <h5>Health update formula</h5>
