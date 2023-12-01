@@ -117,8 +117,14 @@ describe("CommonsForm tests", () => {
     const curr = new Date();
     const today = convertToDateTimeLocalString(curr);
     const yesterday = convertToDateTimeLocalString(new Date(curr.setDate(curr.getDate() - 1)));
-    // Check that equality operation works
+    // Check that inequality operation works
     fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: today } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
+    fireEvent.click(submitButton);
+    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+
+    // Check that equality operation doesn't cause error
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: yesterday } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
     fireEvent.click(submitButton);
     expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
