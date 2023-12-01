@@ -62,7 +62,8 @@ describe("AdminCreateCommonsPage tests", () => {
             "cowPrice": 10,
             "milkPrice": 5,
             "startingBalance": 500,
-            "startingDate": "2022-03-05T00:00:00",
+            "startingDate": "2022-03-05",
+            "lastDate": "2023-12-31",
             "degradationRate": 30.4,
             "capacityPerUser": 10,
             "carryingCapacity": 25,
@@ -86,6 +87,7 @@ describe("AdminCreateCommonsPage tests", () => {
         const cowPriceField = screen.getByLabelText("Cow Price");
         const milkPriceField = screen.getByLabelText("Milk Price");
         const startDateField = screen.getByLabelText("Starting Date");
+        const lastDateField = screen.getByLabelText("Last Date");
         const degradationRateField = screen.getByLabelText("Degradation Rate");
         const capacityPerUserField = screen.getByLabelText("Capacity Per User");
         const carryingCapacityField = screen.getByLabelText("Carrying Capacity");
@@ -99,6 +101,7 @@ describe("AdminCreateCommonsPage tests", () => {
         fireEvent.change(cowPriceField, { target: { value: '10' } })
         fireEvent.change(milkPriceField, { target: { value: '5' } })
         fireEvent.change(startDateField, { target: { value: '2022-03-05' } })
+        fireEvent.change(lastDateField, { target: { value: '2023-12-31' } })
         fireEvent.change(degradationRateField, { target: { value: '30.4' } })
         fireEvent.change(capacityPerUserField, { target: { value: '10' } })
         fireEvent.change(carryingCapacityField, { target: { value: '25' } })
@@ -123,6 +126,7 @@ describe("AdminCreateCommonsPage tests", () => {
             carryingCapacity: 25,
             capacityPerUser: 10,
             startingDate: '2022-03-05T00:00:00.000Z',
+            lastDate: '2023-12-31T00:00:00.000Z',
             showLeaderboard: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
@@ -133,7 +137,8 @@ describe("AdminCreateCommonsPage tests", () => {
         expect(mockToast).toBeCalledWith(<div>Commons successfully created!
             <br />id: 5
             <br />name: My New Commons
-            <br />startDate: 2022-03-05T00:00:00
+            <br />startDate: 2022-03-05
+            
             <br />cowPrice: 10
             <br />capacityPerUser: 10
             <br />carryingCapacity: 25
