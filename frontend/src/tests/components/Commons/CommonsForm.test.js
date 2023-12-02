@@ -129,7 +129,6 @@ describe("CommonsForm tests", () => {
     fireEvent.click(submitButton);
     expect(screen.getByText('Last date must be > starting date')).toBeInTheDocument();
 
-    // Check that equality operation doesn't cause error
 
 
 
@@ -269,6 +268,12 @@ describe("CommonsForm tests", () => {
     fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
     await screen.findByText(/Carrying Capacity must be ≥ 1/i);
+
+    // A test to kill a mutant that messes with padding in the convertToDateTimeLocalString function
+    const paddedDateString = "2023-02-01T04:04";
+    const paddedDate = new Date(paddedDateString);
+    const paddedDateLocalString = convertToDateTimeLocalString(paddedDate);
+    expect(paddedDateLocalString).toEqual(paddedDateString);
 
 
     expect(submitAction).not.toBeCalled();
