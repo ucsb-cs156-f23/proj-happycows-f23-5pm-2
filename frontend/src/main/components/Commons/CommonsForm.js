@@ -343,7 +343,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         isInvalid={!!errors.lastDate}
                         {...register("lastDate", {
                             valueAsDate: true,
-                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, getValues().startingDate) || "Last date must be ≥ starting date"}
+                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, getValues().startingDate) || "Last date must be > starting date"}
                         })}
                     />
                 </OverlayTrigger>

@@ -87,6 +87,11 @@ describe("CommonsForm tests", () => {
       </QueryClientProvider>
     );
 
+
+    const curr = new Date();
+    const today = convertToDateTimeLocalString(curr);
+    const yesterday = convertToDateTimeLocalString(new Date(curr.setDate(curr.getDate() - 1)));
+
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
     const submitButton = screen.getByTestId("CommonsForm-Submit-Button");
     expect(submitButton).toBeInTheDocument();
@@ -94,6 +99,9 @@ describe("CommonsForm tests", () => {
 
     fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "" } });
     fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: yesterday } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
+    fireEvent.click(submitButton);
 
     //Check default empty field
     fireEvent.click(submitButton);
@@ -101,6 +109,7 @@ describe("CommonsForm tests", () => {
     expect(screen.getByText('Degradation rate is required')).toBeInTheDocument();
     expect(screen.getByText('Carrying capacity is required')).toBeInTheDocument();
     expect(screen.getByText('Capacity Per User is required')).toBeInTheDocument();
+    expect(screen.getByText('Last date must be > starting date')).toBeInTheDocument();
 
     //Clear Default Values
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "" } });
@@ -112,22 +121,16 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByText('Cow price is required')).toBeInTheDocument();
     expect(screen.getByText('Milk price is required')).toBeInTheDocument();
     expect(screen.getByText('Starting Balance is required')).toBeInTheDocument();
-    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+    expect(screen.getByText('Last date must be > starting date')).toBeInTheDocument();
 
-    const curr = new Date();
-    const today = convertToDateTimeLocalString(curr);
-    const yesterday = convertToDateTimeLocalString(new Date(curr.setDate(curr.getDate() - 1)));
     // Check that inequality operation works
     fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: today } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
     fireEvent.click(submitButton);
-    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+    expect(screen.getByText('Last date must be > starting date')).toBeInTheDocument();
 
     // Check that equality operation doesn't cause error
-    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: yesterday } });
-    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: yesterday } });
-    fireEvent.click(submitButton);
-    expect(screen.getByText('Last date must be ≥ starting date')).toBeInTheDocument();
+
 
 
     //Reset to Invalid Values
@@ -177,7 +180,8 @@ describe("CommonsForm tests", () => {
 
 
   it("Check Default Values and correct styles", async () => {
-
+    
+    console.log("today: " + today)
     
     const values = {
       name: "", startingBalance: 10000, cowPrice: 100,
