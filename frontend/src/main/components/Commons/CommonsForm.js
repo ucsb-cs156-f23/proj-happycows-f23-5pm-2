@@ -4,6 +4,7 @@ import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
 import { useEffect } from "react";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
+import { convertToDateTimeLocalString, checkGreaterDate } from "main/utils/commonsUtils.js";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     let modifiedCommons = initialCommons ? { ...initialCommons } : {};  // make a shallow copy of initialCommons
@@ -15,6 +16,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         formState: {errors},
         handleSubmit,
         reset,
+        getValues,
     } = useForm(
         // modifiedCommons is guaranteed to be defined (initialCommons or {})
         {defaultValues: modifiedCommons}
@@ -67,14 +69,19 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const testid = "CommonsForm";
 
+    //Default values for start date and end date
     const curr = new Date();
-    const today = curr.toISOString().split('T')[0];
-    const onemonthfromtoday = new Date(curr.getFullYear(), curr.getMonth()+1, curr.getDate()).toISOString().split('T')[0];
-
+    const today = convertToDateTimeLocalString(curr);
+    
+    //last date is 70 days after today
+    // No need to test this line, as it is just a default value
+    const quarterLater = new Date(curr.getTime() + (70 * 24 * 60 * 60 * 1000));
+    const quarterLaterString = convertToDateTimeLocalString(quarterLater);
+    
     const DefaultVals = {
         name: "",
         startingDate: today,
-        lastDate: onemonthfromtoday
+        lastDate: quarterLaterString
     };
 
     return (
@@ -293,9 +300,9 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r4`}>
+            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r3`}>
             <Col md={4}>
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r4`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
                 <OverlayTrigger
                             placement="bottom"
@@ -305,12 +312,12 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-startingDate`}
                         id="startingDate"
-                        type="date"
+                        type="datetime-local"
                         defaultValue={DefaultVals.startingDate}
                         isInvalid={!!errors.startingDate}
                         {...register("startingDate", {
                             valueAsDate: true,
-                            validate: {isPresent: (v) => !isNaN(v)},
+                            validate: {isPresent: (v) => !isNaN(v)}
                         })}
                     />
                 </OverlayTrigger>
@@ -331,12 +338,12 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     <Form.Control
                         data-testid={`${testid}-lastDate`}
                         id="lastDate"
-                        type="date"
+                        type="datetime-local"
                         defaultValue={DefaultVals.lastDate}
                         isInvalid={!!errors.lastDate}
                         {...register("lastDate", {
                             valueAsDate: true,
-                            validate: {isPresent: (v) => !isNaN(v)},
+                            validate: {checkGreaterDate: (v) => checkGreaterDate(v, getValues().startingDate) || "Last date must be > starting date"}
                         })}
                     />
                 </OverlayTrigger>

@@ -20,3 +20,18 @@ export function commonsNotJoined(commons, commonsJoined) {
     return commons.filter(f => !joinedIdList.includes(f.id));
 }
 
+export function convertToDateTimeLocalString(date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+  
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+export function checkGreaterDate(date1, date2) {
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+    return d1 > d2;
+}
